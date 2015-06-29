@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace Adnc.Parallax {
 	public class Parallax2D : MonoBehaviour {
+		[SerializeField] bool debug;
+
 		[Tooltip("Tag to auto parallax elements. Only runs at startup.")]
 		[TagAttribute, SerializeField] public string autoParallaxTag;
 
@@ -62,13 +64,24 @@ namespace Adnc.Parallax {
 			// Loop through and discover all relative parallax distances
 			foreach (ParallaxLayer layer in parallaxLayers) {
 				if (layer.transform.position.z > maxZDistance) maxZDistance = layer.transform.position.z;
-				if (layer.transform.position.z > maxZDistance) maxZDistance = layer.transform.position.z;
+				if (layer.transform.position.z < minZDistance) minZDistance = layer.transform.position.z;
 			}
 
 			// Override discoverd distances if defaults have been provided
 			if (defaultMaxZDistance != 0f) maxZDistance = defaultMaxZDistance;
 			if (defaultMinZDistance != 0f) minZDistance = defaultMinZDistance;
 
+			if (debug) Debug.LogFormat("Max Min: {0}, Max: {1}", minZDistance, maxZDistance);
+
+			// Pre cache layer movement data
+			foreach (ParallaxLayer layer in parallaxLayers) {
+				if (layer.transform.position.z > 0f) {
+					layer.speed = Mathf.Abs((layer.transform.position.z / maxZDistance) - 1f);
+				} else {
+					layer.speed = ((layer.transform.position.z / minZDistance)) * -1f;
+				}
+			}
+			
 			StopAllCoroutines();
 			StartCoroutine(FollowLoop());
 		}
@@ -79,12 +92,14 @@ namespace Adnc.Parallax {
 			float speedY;
 			Vector3 pos;
 
+			prevPos = cam.transform.position;
+
 			while (loop) {
 				targetSpeed = cam.transform.position - prevPos;
 
 				foreach (ParallaxLayer layer in parallaxLayers) {
-					speedX = targetSpeed.x * layer.transform.position.z;
-					speedY = targetSpeed.y * layer.transform.position.z;
+					speedX = targetSpeed.x * layer.speed;
+					speedY = targetSpeed.y * layer.speed;
 
 					pos = layer.transform.position;
 					pos.x += speedX;
