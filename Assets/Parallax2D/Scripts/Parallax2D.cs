@@ -35,7 +35,7 @@ namespace Adnc.Parallax {
 		[SerializeField] float defaultMinZDistance;
 
 		[Tooltip("Set the minimum layer speed of the background elements. 0 will mean no movement, 1 will result in same speed as the cameraTarget.")]
-		[SerializeField, Range(0f, 1f)] float backgroundMinSpeed = 0f;
+		[SerializeField, Range(0f, 1f)] float backgroundMaxSpeed = 1f;
 
 		[Tooltip("Set the maximum layer speed of the foreground elements. 1 is the speed of the target, 2 would be twice its speed.")]
 		[SerializeField, Range(0f, 1f)] float foregroundMaxSpeed = 0.2f;
@@ -46,6 +46,10 @@ namespace Adnc.Parallax {
 		bool loop = true; // Is parallax currently active?
 		Vector3 prevPos; // Location of the camera last frame
 		public static List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>(); // Record of all current parallax layers
+
+		void Awake () {
+			if (cam == null) cam = Camera.main;
+		}
 
 		void Start () {
 			Restart();
@@ -95,14 +99,14 @@ namespace Adnc.Parallax {
 				foreach (ParallaxLayer layer in parallaxLayers) {
 					if (layer.transform.position.z > 0f) {
 						// Background element
-						speed = Mathf.Lerp(1f, backgroundMinSpeed, layer.transform.position.z / maxZDistance);
+						speed = Mathf.Lerp(0f, backgroundMaxSpeed, layer.transform.position.z / maxZDistance);
 					} else {
 						// Foreground element
-						speed = Mathf.Lerp(1f, foregroundMaxSpeed, layer.transform.position.z / minZDistance) * -1f;
+						speed = Mathf.Lerp(0f, foregroundMaxSpeed, layer.transform.position.z / minZDistance) * -1f;
 					}
 
-					speedX = targetSpeed.x * speed;
-					speedY = targetSpeed.y * speed;
+					speedX = targetSpeed.x * speed * parallaxSpeedFactor.x;
+					speedY = targetSpeed.y * speed * parallaxSpeedFactor.y;
 
 					pos = layer.transform.position;
 					pos.x += speedX;
