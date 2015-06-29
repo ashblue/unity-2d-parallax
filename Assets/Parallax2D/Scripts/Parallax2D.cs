@@ -85,6 +85,7 @@ namespace Adnc.Parallax {
 			float speedY;
 			Vector3 pos;
 
+			loop = true;
 			prevPos = cam.transform.position;
 
 			while (loop) {
@@ -114,8 +115,15 @@ namespace Adnc.Parallax {
 			}
 		}
 
-		public void Stop () {
+		public void RestorePositions () {
+			foreach (ParallaxLayer layer in parallaxLayers) {
+				layer.transform.position = layer.originPos;
+			}
+			// @TODO Loop through all parallax elements and restore their origin position
+		}
 
+		public void Stop () {
+			loop = false;
 		}
 
 		void OnDestroy () {
