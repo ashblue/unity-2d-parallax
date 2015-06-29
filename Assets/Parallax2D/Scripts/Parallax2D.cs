@@ -21,12 +21,6 @@ namespace Adnc.Parallax {
 		[Header("Camera")]
 		[Tooltip("Current camera to parallax from. Will default to using the main camera if no camera is provided.")]
 		[SerializeField] Camera cam;
-		
-		[Tooltip("Optional focal point of the camera (all elements are parallaxed relative to this). If left blank Focus Distance will be used.")]
-		[SerializeField] Transform focusTarget;
-
-		[Tooltip("If no camera target is provided, this will be used as the z axis to relatively parallax elements from.")]
-		[SerializeField] float focusDistance = 0f;
 
 		[Header("Overrides")]
 		[Tooltip("You can override what is considered the furthest away Z index. All distant elements will be parallaxed " +
