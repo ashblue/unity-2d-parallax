@@ -13,7 +13,7 @@ namespace Adnc.Parallax {
 		[TagAttribute, SerializeField] public string autoParallaxRepeatTag;
 
 		[Tooltip("Multiplies the parallax scroll speed")]
-		[SerializeField] Vector2 parallaxSpeed = new Vector2(1f, 1f);
+		[SerializeField] Vector2 parallaxSpeedFactor = new Vector2(1f, 1f);
 
 		[Tooltip("Maximum number of repeating elements allowed (excess will be deleted)")]
 		[SerializeField] int maxHistory;
@@ -34,8 +34,11 @@ namespace Adnc.Parallax {
 		[SerializeField] float defaultMaxZDistance;
 		[SerializeField] float defaultMinZDistance;
 
-		[Tooltip("Set the minimum layer speed of the most distant element. 0 will mean no movement, 1 will result in same speed as the cameraTarget")]
-		[SerializeField, Range(0f, 1f)] float minLayerSpeed = 0f;
+		[Tooltip("Set the minimum layer speed of the background elements. 0 will mean no movement, 1 will result in same speed as the cameraTarget.")]
+		[SerializeField, Range(0f, 1f)] float backgroundMinSpeed = 0f;
+
+		[Tooltip("Set the maximum layer speed of the foreground elements. 1 is the speed of the target, 2 would be twice its speed.")]
+		[SerializeField, Range(0f, 1f)] float foregroundMaxSpeed = 0.2f;
 
 
 		float maxZDistance = 0f; // Furthest away element
@@ -72,15 +75,6 @@ namespace Adnc.Parallax {
 			if (defaultMinZDistance != 0f) minZDistance = defaultMinZDistance;
 
 			if (debug) Debug.LogFormat("Max Min: {0}, Max: {1}", minZDistance, maxZDistance);
-
-			// Pre cache layer movement data
-			foreach (ParallaxLayer layer in parallaxLayers) {
-				if (layer.transform.position.z > 0f) {
-					layer.speed = Mathf.Abs((layer.transform.position.z / maxZDistance) - 1f);
-				} else {
-					layer.speed = ((layer.transform.position.z / minZDistance)) * -1f;
-				}
-			}
 			
 			StopAllCoroutines();
 			StartCoroutine(FollowLoop());
@@ -88,6 +82,7 @@ namespace Adnc.Parallax {
 
 		IEnumerator FollowLoop () {
 			Vector3 targetSpeed;
+			float speed;
 			float speedX;
 			float speedY;
 			Vector3 pos;
@@ -98,8 +93,16 @@ namespace Adnc.Parallax {
 				targetSpeed = cam.transform.position - prevPos;
 
 				foreach (ParallaxLayer layer in parallaxLayers) {
-					speedX = targetSpeed.x * layer.speed;
-					speedY = targetSpeed.y * layer.speed;
+					if (layer.transform.position.z > 0f) {
+						// Background element
+						speed = Mathf.Lerp(1f, backgroundMinSpeed, layer.transform.position.z / maxZDistance);
+					} else {
+						// Foreground element
+						speed = Mathf.Lerp(1f, foregroundMaxSpeed, layer.transform.position.z / minZDistance) * -1f;
+					}
+
+					speedX = targetSpeed.x * speed;
+					speedY = targetSpeed.y * speed;
 
 					pos = layer.transform.position;
 					pos.x += speedX;
