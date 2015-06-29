@@ -37,7 +37,7 @@ namespace Adnc.Parallax {
 		[Tooltip("Set the minimum layer speed of the background elements. 0 will mean no movement, 1 will result in same speed as the cameraTarget.")]
 		[SerializeField, Range(0f, 1f)] float backgroundMaxSpeed = 1f;
 
-		[Tooltip("Set the maximum layer speed of the foreground elements. 1 is the speed of the target, 2 would be twice its speed.")]
+		[Tooltip("Set the maximum layer speed of the foreground elements. 1 is the speed of the target, 0 would be no movement.")]
 		[SerializeField, Range(0f, 1f)] float foregroundMaxSpeed = 0.2f;
 
 
