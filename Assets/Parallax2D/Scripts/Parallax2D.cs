@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Adnc.Parallax {
 	public class Parallax2D : MonoBehaviour {
@@ -9,29 +10,101 @@ namespace Adnc.Parallax {
 		[Tooltip("Tag to auto parallax an element that repeats (must be in a container). Only runs at startup.")]
 		[TagAttribute, SerializeField] public string autoParallaxRepeatTag;
 
-		[Tooltip("Current camera to parallax from. Will default to using the main camera if no camera is provided.")]
-		[SerializeField] GameObject camera;
-
-		[Tooltip("Focal point of the camera (used for parallax effect positioning)")]
-		[SerializeField] GameObject cameraTarget;
-
 		[Tooltip("Multiplies the parallax scroll speed")]
-		[SerializeField] Vector2 parallaxSpeed;
+		[SerializeField] Vector2 parallaxSpeed = new Vector2(1f, 1f);
 
 		[Tooltip("Maximum number of repeating elements allowed (excess will be deleted)")]
 		[SerializeField] int maxHistory;
 
-		void Awake () {
-			
+		[Header("Camera")]
+		[Tooltip("Current camera to parallax from. Will default to using the main camera if no camera is provided.")]
+		[SerializeField] Camera cam;
+		
+		[Tooltip("Optional focal point of the camera (all elements are parallaxed relative to this). If left blank Focus Distance will be used.")]
+		[SerializeField] Transform focusTarget;
+
+		[Tooltip("If no camera target is provided, this will be used as the z axis to relatively parallax elements from.")]
+		[SerializeField] float focusDistance = 0f;
+
+		[Header("Overrides")]
+		[Tooltip("You can override what is considered the furthest away Z index. All distant elements will be parallaxed " +
+			"relative this one. Leave at 0 to allow an auto max distance to be generated at run-time.")]
+		[SerializeField] float defaultMaxZDistance;
+		[SerializeField] float defaultMinZDistance;
+
+		[Tooltip("Set the minimum layer speed of the most distant element. 0 will mean no movement, 1 will result in same speed as the cameraTarget")]
+		[SerializeField, Range(0f, 1f)] float minLayerSpeed = 0f;
+
+
+		float maxZDistance = 0f; // Furthest away element
+		float minZDistance = 0f; // Nearest element
+		bool loop = true; // Is parallax currently active?
+		Vector3 prevPos; // Location of the camera last frame
+		public static List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>(); // Record of all current parallax layers
+
+		void Start () {
+			Restart();
+
+			// @TODO We should try to auto calculate a default speed based on max distances, need to have a fallback that can just parallax with one element
 		}
 
-		void Reset () {
+		public void Restart () {
+			parallaxLayers.Clear();
+
+			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxTag)) {
+				go.AddComponent(typeof(ParallaxLayer));
+			}
+
+			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxRepeatTag)) {
+				go.AddComponent(typeof(ParallaxLayer));
+			}
+
+			// Loop through and discover all relative parallax distances
+			foreach (ParallaxLayer layer in parallaxLayers) {
+				if (layer.transform.position.z > maxZDistance) maxZDistance = layer.transform.position.z;
+				if (layer.transform.position.z > maxZDistance) maxZDistance = layer.transform.position.z;
+			}
+
+			// Override discoverd distances if defaults have been provided
+			if (defaultMaxZDistance != 0f) maxZDistance = defaultMaxZDistance;
+			if (defaultMinZDistance != 0f) minZDistance = defaultMinZDistance;
+
+			StopAllCoroutines();
+			StartCoroutine(FollowLoop());
+		}
+
+		IEnumerator FollowLoop () {
+			Vector3 targetSpeed;
+			float speedX;
+			float speedY;
+			Vector3 pos;
+
+			while (loop) {
+				targetSpeed = cam.transform.position - prevPos;
+
+				foreach (ParallaxLayer layer in parallaxLayers) {
+					speedX = targetSpeed.x * layer.transform.position.z;
+					speedY = targetSpeed.y * layer.transform.position.z;
+
+					pos = layer.transform.position;
+					pos.x += speedX;
+					pos.y += speedY;
+					layer.transform.position = pos;
+				}
+				
+				prevPos = cam.transform.position;
+
+				yield return null;
+			}
+		}
+
+		public void Stop () {
 
 		}
 
 		void OnDestroy () {
-
-		} 
+			parallaxLayers.Clear();
+		}
 	}
 }
 
