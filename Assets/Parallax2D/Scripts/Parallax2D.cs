@@ -13,15 +13,11 @@ namespace Adnc.Parallax {
 		[Tooltip("Tag to auto parallax elements. Only runs at startup.")]
 		[TagAttribute, SerializeField] public string autoParallaxTag;
 
-		// @TODO Consider ditching this
-		[Tooltip("Tag to auto parallax an element that repeats (must be in a container). Only runs at startup.")]
-		[TagAttribute, SerializeField] public string autoParallaxRepeatTag;
-
 		[Tooltip("Multiplies the parallax scroll speed")]
 		[SerializeField] Vector2 parallaxSpeedFactor = new Vector2(1f, 1f);
 
 		[Tooltip("Maximum number of repeating elements allowed (excess will be deleted)")]
-		[SerializeField] int maxHistory;
+		public int maxHistory = 20;
 
 		[Header("Camera")]
 		[Tooltip("Current camera to parallax from. Will default to using the main camera if no camera is provided.")]
@@ -44,7 +40,7 @@ namespace Adnc.Parallax {
 		bool loop = true; // Is parallax currently active?
 		Vector3 prevPos; // Location of the camera last frame
 		public ScreenRect screen = new ScreenRect();
-		public List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>(); // Record of all current parallax layers
+		static public List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>(); // Record of all current parallax layers
 
 		void Awake () {
 			if (cam == null) cam = Camera.main;
@@ -72,10 +68,6 @@ namespace Adnc.Parallax {
 
 		public void Play () {
 			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxTag)) {
-				go.AddComponent(typeof(ParallaxLayer));
-			}
-			
-			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxRepeatTag)) {
 				go.AddComponent(typeof(ParallaxLayer));
 			}
 			
@@ -160,7 +152,10 @@ namespace Adnc.Parallax {
 		}
 
 		void OnDestroy () {
-			current = null;
+			if (current == this) {
+				Reset();
+				current = null;
+			}
 		}
 	}
 }
