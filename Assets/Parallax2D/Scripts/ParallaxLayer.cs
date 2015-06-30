@@ -28,9 +28,10 @@ namespace Adnc.Parallax {
 
 		List<GameObject> buddies = new List<GameObject>(); // List of all created buddies
 
-//		[SerializeField] bool randomDistance;
-//		[SerializeField] float minDistance = 2f;
-//		[SerializeField] float maxDistance = 7f;
+		[Tooltip("Create a random amount of distance between each repeated item")]
+		[SerializeField] bool randomDistance;
+		[SerializeField] float minDistance = 2f;
+		[SerializeField] float maxDistance = 7f;
 //
 //		[SerializeField] bool randomYOffset;
 //		[SerializeField] float minYOffset = 0.2f;
@@ -126,13 +127,14 @@ namespace Adnc.Parallax {
 				rect.xMin += sprite.bounds.size.x;
 			}
 
-			// Set position
+			// Find the center placement of the new sprite
 			Vector3 pos = rect.center;
-			pos.x = rect.xMax + sprite.bounds.extents.x;
+			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
+			pos.x = rect.xMax + sprite.bounds.extents.x + distance;
 			go.transform.position = pos;
 
 			// Update wrapping rectangle
-			rect.xMax += sprite.bounds.size.x;
+			rect.xMax += sprite.bounds.size.x + distance;
 		}
 
 		void AddLeftBuddy (SpriteRenderer sprite) {
@@ -150,11 +152,12 @@ namespace Adnc.Parallax {
 			
 			// Set position
 			Vector3 pos = rect.center;
-			pos.x = rect.xMin - sprite.bounds.extents.x;
+			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
+			pos.x = rect.xMin - sprite.bounds.extents.x - distance;
 			go.transform.position = pos;
 			
 			// Update wrapping rectangle
-			rect.xMin -= sprite.bounds.size.x;
+			rect.xMin -= sprite.bounds.size.x - distance;
 		}
 	}
 }
