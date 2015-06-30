@@ -32,10 +32,11 @@ namespace Adnc.Parallax {
 		[SerializeField] bool randomDistance;
 		[SerializeField] float minDistance = 2f;
 		[SerializeField] float maxDistance = 7f;
-//
-//		[SerializeField] bool randomYOffset;
-//		[SerializeField] float minYOffset = 0.2f;
-//		[SerializeField] float maxYOffset = 5f;
+
+		[Tooltip("Add a random offset between each repeated tile")]
+		[SerializeField] bool randomYOffset;
+		[SerializeField] float minYOffset = 0.2f;
+		[SerializeField] float maxYOffset = 5f;
 
 		void Awake () {
 			originPos = transform.position;
@@ -128,9 +129,12 @@ namespace Adnc.Parallax {
 			}
 
 			// Find the center placement of the new sprite
-			Vector3 pos = rect.center;
+			Vector3 pos = sprite.transform.position;
 			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
+			float offset = (maxYOffset - minYOffset) / 2f;
+
 			pos.x = rect.xMax + sprite.bounds.extents.x + distance;
+			pos.y += randomYOffset ? Random.Range(-offset, offset) : 0f;
 			go.transform.position = pos;
 
 			// Update wrapping rectangle
@@ -151,9 +155,12 @@ namespace Adnc.Parallax {
 			}
 			
 			// Set position
-			Vector3 pos = rect.center;
+			Vector3 pos = sprite.transform.position;
 			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
+			float offset = (maxYOffset - minYOffset) / 2f;
+
 			pos.x = rect.xMin - sprite.bounds.extents.x - distance;
+			pos.y += randomYOffset ? Random.Range(-offset, offset) : 0f;
 			go.transform.position = pos;
 			
 			// Update wrapping rectangle
