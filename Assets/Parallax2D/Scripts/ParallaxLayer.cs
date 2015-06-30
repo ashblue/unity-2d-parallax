@@ -3,15 +3,35 @@ using System.Collections;
 
 namespace Adnc.Parallax {
 	public class ParallaxLayer : MonoBehaviour {
+		static float repeatPadding = 1f; // How many units to spawn a repeated tile in advance
+		SpriteRenderer repeatSprite; // Master sprite used to create duplicates
+		Rect rect = new Rect(); // Used to monitor the boundary of repeating parallax elements
+		[HideInInspector] public Vector3 originPos; // Captured original position in-case we want to reset it
+
+		[Tooltip("Draw a visual gizmo box around the boundary of this element")]
 		public bool debug;
 
-		[HideInInspector] public Vector3 originPos; // Captured original position in-case we want to reset it
-		static float repeatPadding = 1f; // How many units to spawn a repeated tile in advance
+		[Tooltip("Multiply the parallax speed factor of this individual element.")]
+		public Vector2 speedFactor = Vector2.one;
 
+		[Header("Motorized")]
+		[Tooltip("Should this layer move on its own?")]
+		[SerializeField] bool motorized;
+
+		[Tooltip("How fast should this unit move per second?")]
+		[SerializeField] float moveSpeed = 0.7f;
+
+		[Header("Repeating Image")]
+		[Tooltip("Should the inner graphic be repeated in camera view?")]
 		[SerializeField] bool repeat;
-		SpriteRenderer repeatSprite;
 
-		Rect rect = new Rect(); // Used to monitor the boundary of repeating parallax elements
+//		[SerializeField] bool randomDistance;
+//		[SerializeField] float minDistance = 2f;
+//		[SerializeField] float maxDistance = 7f;
+//
+//		[SerializeField] bool randomYOffset;
+//		[SerializeField] float minYOffset = 0.2f;
+//		[SerializeField] float maxYOffset = 5f;
 
 		void Awake () {
 			originPos = transform.position;
@@ -43,16 +63,19 @@ namespace Adnc.Parallax {
 			}
 		}
 
-		bool IsNewRightBuddy () {
-			return Parallax2D.current.screen.rect.xMax + repeatPadding > rect.xMax;
-		}
-
-		bool IsNewLeftBuddy () {
-			return Parallax2D.current.screen.rect.xMin - repeatPadding < rect.xMin;
-		}
-
-		Vector2 rectCenter;
+		Vector3 tmpPos; // Temp vars for storing loop values
+		float tmpSpeed;
 		public void ParallaxUpdate (Vector2 change) {
+			if (motorized) {
+				tmpPos = transform.position;
+				tmpSpeed = moveSpeed * Time.deltaTime;
+
+				tmpPos.x += tmpSpeed;
+
+				transform.position = tmpPos;
+				change.x += tmpSpeed;
+			}
+
 			if (repeat) {
 				// Reposition the rectangle to wrap the elements correctly
 				rect.position += change;
@@ -71,7 +94,15 @@ namespace Adnc.Parallax {
 			}
 		}
 
-		public void AddRightBuddy (SpriteRenderer sprite) {
+		bool IsNewRightBuddy () {
+			return Parallax2D.current.screen.rect.xMax + repeatPadding > rect.xMax;
+		}
+		
+		bool IsNewLeftBuddy () {
+			return Parallax2D.current.screen.rect.xMin - repeatPadding < rect.xMin;
+		}
+
+		void AddRightBuddy (SpriteRenderer sprite) {
 			GameObject go = Instantiate(sprite.gameObject) as GameObject;
 			go.transform.SetParent(transform);
 
@@ -84,7 +115,7 @@ namespace Adnc.Parallax {
 			rect.xMax += sprite.bounds.size.x;
 		}
 
-		public void AddLeftBuddy (SpriteRenderer sprite) {
+		void AddLeftBuddy (SpriteRenderer sprite) {
 			GameObject go = Instantiate(sprite.gameObject) as GameObject;
 			go.transform.SetParent(transform);
 			

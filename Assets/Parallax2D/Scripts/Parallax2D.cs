@@ -131,8 +131,8 @@ namespace Adnc.Parallax {
 						speedFactor = Mathf.Lerp(0f, foregroundMaxSpeed, layer.transform.position.z / minZDistance) * -1f;
 					}
 
-					speed.x = targetSpeed.x * speedFactor * parallaxSpeedFactor.x;
-					speed.y = targetSpeed.y * speedFactor * parallaxSpeedFactor.y;
+					speed.x = targetSpeed.x * speedFactor * parallaxSpeedFactor.x * layer.speedFactor.x;
+					speed.y = targetSpeed.y * speedFactor * parallaxSpeedFactor.y * layer.speedFactor.y;
 
 					pos = layer.transform.position;
 					pos.x += speed.x;
