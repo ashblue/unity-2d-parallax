@@ -59,6 +59,7 @@ namespace Adnc.Parallax {
 					// Create a clone of the repeatSprite at the same location
 					GameObject clone = Instantiate(repeatSprite.gameObject) as GameObject;
 					clone.transform.position = repeatSprite.transform.position;
+					clone.transform.SetParent(transform);
 					buddies.Add(clone);
 
 					// Hide the repeatSprite and use it for prefabs

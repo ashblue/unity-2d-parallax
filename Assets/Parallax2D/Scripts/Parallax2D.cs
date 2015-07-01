@@ -9,6 +9,7 @@ namespace Adnc.Parallax {
 	public class Parallax2D : MonoBehaviour {
 		public static Parallax2D current;
 		[SerializeField] bool debug;
+		[SerializeField] bool autoInit = true;
 
 		[Tooltip("Tag to auto parallax elements. Only runs at startup.")]
 		[TagAttribute, SerializeField] public string autoParallaxTag;
@@ -21,7 +22,7 @@ namespace Adnc.Parallax {
 
 		[Header("Camera")]
 		[Tooltip("Current camera to parallax from. Will default to using the main camera if no camera is provided.")]
-		[SerializeField] Camera cam;
+		public Camera cam;
 
 		[Header("Overrides")]
 		[Tooltip("You can override what is considered the furthest away Z index. All distant elements will be parallaxed " +
@@ -43,20 +44,25 @@ namespace Adnc.Parallax {
 		static public List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>(); // Record of all current parallax layers
 
 		void Awake () {
-			if (cam == null) cam = Camera.main;
-
 			if (current != null) {
 				Debug.LogError("Only 1x Parallax2D script may be active at a time. Delete the current Parallax2D script before creating a new one. Aborting.");
 				Destroy(gameObject);
 				return;
 			}
-
+			
 			current = this;
 		}
 
 		void Start () {
+			if (autoInit) {
+				Init();
+			}
+		}
+
+		public void Init () {
+			if (cam == null) cam = Camera.main;
+
 			Play();
-			// @TODO We should try to auto calculate a default speed based on max distances, need to have a fallback that can just parallax with one element
 		}
 
 		/// <summary>
@@ -101,6 +107,8 @@ namespace Adnc.Parallax {
 			foreach (ParallaxLayer layer in parallaxLayers) {
 				layer.ParallaxSetup();
 			}
+
+			if (debug) Debug.LogFormat("Layer count: {0}", parallaxLayers.Count);
 
 			while (loop) {
 
