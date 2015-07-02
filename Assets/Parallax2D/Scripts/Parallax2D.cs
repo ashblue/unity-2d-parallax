@@ -12,7 +12,10 @@ namespace Adnc.Parallax {
 		[SerializeField] bool autoInit = true;
 
 		[Tooltip("Tag to auto parallax elements. Only runs at startup.")]
-		[TagAttribute, SerializeField] public string autoParallaxTag;
+		[TagAttribute, SerializeField] string autoParallaxTag;
+
+		[Tooltip("Tag to auto parallax a group of elements. Only runs at startup.")]
+		[TagAttribute, SerializeField] string autoParallaxTagGroup;
 
 		[Tooltip("Multiplies the parallax scroll speed")]
 		[SerializeField] Vector2 parallaxSpeedFactor = new Vector2(1f, 1f);
@@ -75,6 +78,11 @@ namespace Adnc.Parallax {
 		public void Play () {
 			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxTag)) {
 				go.AddComponent(typeof(ParallaxLayer));
+			}
+
+			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxTagGroup)) {
+				ParallaxLayer layer = go.AddComponent(typeof(ParallaxLayer)) as ParallaxLayer;
+				layer.repeat = true;
 			}
 			
 			// Loop through and discover all relative parallax distances

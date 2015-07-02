@@ -24,7 +24,7 @@ namespace Adnc.Parallax {
 
 		[Header("Repeating Image")]
 		[Tooltip("Should the inner graphic be repeated in camera view?")]
-		[SerializeField] bool repeat;
+		public bool repeat;
 
 		List<GameObject> buddies = new List<GameObject>(); // List of all created buddies
 
@@ -49,7 +49,7 @@ namespace Adnc.Parallax {
 				if (repeatSprite.gameObject == gameObject) repeatSprite = null; // Ignore parent element
 				
 				if (repeatSprite == null) {
-					Debug.LogError("ParallaxLayer was marked as repeat, but no child element with SpriteRenderer was found to repeat. Disabling repeat.");
+					Debug.LogErrorFormat("{0} ParallaxLayer was marked as repeat, but no child element with SpriteRenderer was found to repeat. Disabling repeat.", gameObject.name);
 					repeat = false;
 				} else {
 					rect.width = repeatSprite.bounds.size.x;
