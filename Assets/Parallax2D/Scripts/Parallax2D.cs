@@ -77,12 +77,16 @@ namespace Adnc.Parallax {
 
 		public void Play () {
 			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxTag)) {
-				go.AddComponent(typeof(ParallaxLayer));
+				if (go.GetComponent<ParallaxLayer>() == null) {
+					go.AddComponent(typeof(ParallaxLayer));
+				}
 			}
 
 			foreach (GameObject go in GameObject.FindGameObjectsWithTag(autoParallaxTagGroup)) {
-				ParallaxLayer layer = go.AddComponent(typeof(ParallaxLayer)) as ParallaxLayer;
-				layer.repeat = true;
+				if (go.GetComponent<ParallaxLayer>() == null) {
+					ParallaxLayer layer = go.AddComponent(typeof(ParallaxLayer)) as ParallaxLayer;
+					layer.repeat = true;
+				}
 			}
 			
 			// Loop through and discover all relative parallax distances
