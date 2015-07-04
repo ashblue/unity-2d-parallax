@@ -5,9 +5,10 @@ using System.Collections.Generic;
 namespace Adnc.Parallax {
 	public class ParallaxLayer : MonoBehaviour {
 		static float repeatPadding = 1f; // How many units to spawn a repeated tile in advance
-		Rect rect = new Rect(); // Used to monitor the boundary of repeating parallax elements
 		[HideInInspector] public Vector3 originPos; // Captured original position in-case we want to reset it
-		SpriteRenderer repeatSprite;
+
+		SpriteRenderer[] repeatSprite;
+		Rect rect = new Rect(); // Used to monitor the boundary of repeating parallax elements
 
 		[Tooltip("Draw a visual gizmo box around the boundary of this element")]
 		public bool debug;
@@ -26,7 +27,7 @@ namespace Adnc.Parallax {
 		[Tooltip("Should the inner graphic be repeated in camera view?")]
 		public bool repeat;
 
-		List<GameObject> buddies = new List<GameObject>(); // List of all created buddies
+		List<List<GameObject>> buddies = new List<List<GameObject>>(); // List of all created buddies
 
 		[Tooltip("Create a random amount of distance between each repeated item")]
 		[SerializeField] bool randomDistance;
@@ -45,33 +46,39 @@ namespace Adnc.Parallax {
 
 		public void ParallaxSetup () {
 			if (repeat) {
-				repeatSprite = GetComponentInChildren<SpriteRenderer>();
-				if (repeatSprite.gameObject == gameObject) repeatSprite = null; // Ignore parent element
-				
-				if (repeatSprite == null) {
+				repeatSprite = GetComponentsInChildren<SpriteRenderer>();
+
+				if (repeatSprite.Length == 0) {
 					Debug.LogErrorFormat("{0} ParallaxLayer was marked as repeat, but no child element with SpriteRenderer was found to repeat. Disabling repeat.", gameObject.name);
 					repeat = false;
 				} else {
-					rect.width = repeatSprite.bounds.size.x;
-					rect.height = repeatSprite.bounds.size.y;
-					rect.center = repeatSprite.bounds.center;
+					Rect size = GetSize(repeatSprite);
+					rect.position = size.position;
+					rect.width = size.width;
+					rect.height = size.height;
 
-					// Create a clone of the repeatSprite at the same location
-					GameObject clone = Instantiate(repeatSprite.gameObject) as GameObject;
-					clone.transform.position = repeatSprite.transform.position;
-					clone.transform.SetParent(transform);
-					buddies.Add(clone);
+					List<GameObject> group = new List<GameObject>();
+					foreach (SpriteRenderer sprite in repeatSprite) {
+						// Create a clone of the repeatSprite at the same location
+						GameObject clone = Instantiate(sprite.gameObject) as GameObject;
+						clone.transform.position = sprite.transform.position;
+						clone.transform.SetParent(transform);
 
-					// Hide the repeatSprite and use it for prefabs
-					repeatSprite.gameObject.SetActive(false);
+						group.Add(clone);
+						
+						// Hide the sprite and use it for prefabs
+						sprite.gameObject.SetActive(false);
+					}
+				
+					buddies.Add(group);
 					
 					// Make sure the repeat element repeats up until it shows on the current viewing window
 					while (IsNewRightBuddy()) {
-						AddRightBuddy(repeatSprite);
+						AddRightBuddy();
 					}
 
 					while (IsNewLeftBuddy()) {
-						AddLeftBuddy(repeatSprite);
+						AddLeftBuddy();
 					}
 				}
 			}
@@ -95,17 +102,37 @@ namespace Adnc.Parallax {
 				rect.position += change;
 
 				if (IsNewRightBuddy()) {
-					AddRightBuddy(repeatSprite);
+					AddRightBuddy();
 				}
 				
 				if (IsNewLeftBuddy()) {
-					AddLeftBuddy(repeatSprite);
+					AddLeftBuddy();
 				}
 
 				if (debug) {
 					ScreenRect.DrawBoundary(rect, Color.gray);
 				}
 			}
+		}
+
+		Rect GetSize (SpriteRenderer[] sprites) {
+			float xMin = sprites[0].bounds.min.x;
+			float xMax = sprites[0].bounds.max.x;
+			float yMin = sprites[0].bounds.min.y;
+			float yMax = sprites[0].bounds.max.y;
+			
+			foreach (SpriteRenderer sprite in sprites) {
+				if (sprite.bounds.min.x < xMin) 
+					xMin = sprite.bounds.min.x;
+				if (sprite.bounds.min.y < yMin)
+					yMin = sprite.bounds.min.y;
+				if (sprite.bounds.max.x > xMax)
+					xMax = sprite.bounds.max.x;
+				if (sprite.bounds.max.y > yMax)
+					yMax = sprite.bounds.max.y;
+			}
+			
+			return Rect.MinMaxRect(xMin, yMax, xMax, yMin);
 		}
 
 		bool IsNewRightBuddy () {
@@ -116,56 +143,88 @@ namespace Adnc.Parallax {
 			return Parallax2D.current.screen.rect.xMin - repeatPadding < rect.xMin;
 		}
 
-		void AddRightBuddy (SpriteRenderer sprite) {
-			GameObject go = Instantiate(sprite.gameObject) as GameObject;
-			go.transform.SetParent(transform);
-			go.SetActive(true);
-			buddies.Add(go);
+		void AddRightBuddy () {
+			List<GameObject> group = new List<GameObject>();
+
+			// Distance and offset are kept outside the loop to keep spacing consistent between grouped elements
+			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
+			float offset = (maxYOffset - minYOffset) / 2f; 
+			Rect size = GetSize(repeatSprite);
+			
+			foreach (SpriteRenderer sprite in repeatSprite) {
+				GameObject go = Instantiate(sprite.gameObject) as GameObject;
+				go.transform.SetParent(transform);
+				go.SetActive(true);
+				group.Add(go);
+
+				// Find the offset x position
+				float xPos = sprite.transform.position.x - size.xMin;
+
+				// Find the center placement of the new sprite
+				Vector3 pos = sprite.transform.position;
+
+				pos.x = rect.xMax + xPos + distance;
+				pos.y += randomYOffset ? Random.Range(-offset, offset) : 0f;
+				go.transform.position = pos;
+			}
+
+			buddies.Add(group);
 
 			// History overflow check
 			if (buddies.Count > Parallax2D.current.maxHistory) {
-				Destroy(buddies[0]);
+				foreach (GameObject sprite in buddies[0]) {
+					Destroy(sprite);
+				}
+				
 				buddies.RemoveAt(0);
-				rect.xMin += sprite.bounds.size.x;
+				
+				rect.xMin += size.width;
 			}
 
-			// Find the center placement of the new sprite
-			Vector3 pos = sprite.transform.position;
-			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
-			float offset = (maxYOffset - minYOffset) / 2f;
-
-			pos.x = rect.xMax + sprite.bounds.extents.x + distance;
-			pos.y += randomYOffset ? Random.Range(-offset, offset) : 0f;
-			go.transform.position = pos;
-
 			// Update wrapping rectangle
-			rect.xMax += sprite.bounds.size.x + distance;
+			rect.xMax += size.width + distance;
 		}
-
-		void AddLeftBuddy (SpriteRenderer sprite) {
-			GameObject go = Instantiate(sprite.gameObject) as GameObject;
-			go.transform.SetParent(transform);
-			go.SetActive(true);
-			buddies.Insert(0, go);
-
+		
+		void AddLeftBuddy () {
+			List<GameObject> group = new List<GameObject>();
+			
+			// Distance and offset are kept outside the loop to keep spacing consistent between grouped elements
+			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
+			float offset = (maxYOffset - minYOffset) / 2f; 
+			Rect size = GetSize(repeatSprite);
+			
+			foreach (SpriteRenderer sprite in repeatSprite) {
+				GameObject go = Instantiate(sprite.gameObject) as GameObject;
+				go.transform.SetParent(transform);
+				go.SetActive(true);
+				group.Add(go);
+				
+				// x position offset
+				float xPos = size.xMax - sprite.transform.position.x;
+				
+				// Find the center placement of the new sprite
+				Vector3 pos = sprite.transform.position;
+				
+				pos.x = rect.xMin - xPos - distance;
+				pos.y += randomYOffset ? Random.Range(-offset, offset) : 0f;
+				go.transform.position = pos;
+			}
+			
+			buddies.Insert(0, group);
+			
 			// History overflow check
 			if (buddies.Count > Parallax2D.current.maxHistory) {
-				Destroy(buddies[buddies.Count - 1]);
+				foreach (GameObject sprite in buddies[buddies.Count - 1]) {
+					Destroy(sprite);
+				}
+				
 				buddies.RemoveAt(buddies.Count - 1);
-				rect.xMax -= sprite.bounds.size.x;
+				
+				rect.xMax -= size.width;
 			}
 			
-			// Set position
-			Vector3 pos = sprite.transform.position;
-			float distance = randomDistance ? Random.Range(minDistance, maxDistance) : 0f;
-			float offset = (maxYOffset - minYOffset) / 2f;
-
-			pos.x = rect.xMin - sprite.bounds.extents.x - distance;
-			pos.y += randomYOffset ? Random.Range(-offset, offset) : 0f;
-			go.transform.position = pos;
-			
 			// Update wrapping rectangle
-			rect.xMin -= sprite.bounds.size.x - distance;
+			rect.xMin -= size.width - distance;
 		}
 	}
 }
