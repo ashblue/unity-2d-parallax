@@ -43,7 +43,7 @@ namespace Adnc.Parallax {
 			originPos = transform.position;
 
 			if (transform.position.z == 0f) {
-				Debug.LogWarningFormat("The Z-Index of Transform {0} is set to 0. Please set the Z-Index to a non-zero number. Distabling parallax on GameObject.", gameObject.name);
+				Debug.LogWarningFormat("The Z-Index of GameObject {0} is set to 0. Please set the Z-Index to a non-zero number. Distabling parallax on GameObject.", gameObject.name);
 				Destroy(this);
 				return;
 			}
@@ -55,7 +55,10 @@ namespace Adnc.Parallax {
 			if (repeat) {
 				repeatSprite = GetComponentsInChildren<SpriteRenderer>();
 
-				if (repeatSprite.Length == 0) {
+				if (GetComponent<SpriteRenderer>() != null) {
+					Debug.LogErrorFormat("GameObject {0} cannot have a SpriteRenderer (only allowed on children). Please remove this before proceeding. Disabling repeat.", name);
+					repeat = false;
+				} else if (repeatSprite.Length == 0) {
 					Debug.LogErrorFormat("{0} ParallaxLayer was marked as repeat, but no child element with SpriteRenderer was found to repeat. Disabling repeat.", gameObject.name);
 					repeat = false;
 				} else {
