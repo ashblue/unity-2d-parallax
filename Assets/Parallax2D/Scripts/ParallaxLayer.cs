@@ -41,6 +41,13 @@ namespace Adnc.Parallax {
 
 		void Awake () {
 			originPos = transform.position;
+
+			if (transform.position.z == 0f) {
+				Debug.LogWarningFormat("The Z-Index of Transform {0} is set to 0. Please set the Z-Index to a non-zero number. Distabling parallax on GameObject.", gameObject.name);
+				Destroy(this);
+				return;
+			}
+
 			Parallax2D.parallaxLayers.Add(this);
 		}
 
