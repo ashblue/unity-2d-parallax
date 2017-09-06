@@ -17,6 +17,10 @@ namespace Adnc.QuickParallax {
         [SerializeField]
         bool _autoInit = true;
 
+        [Tooltip("Manually assign a tracking object. Leaving this blank will follow the current main camera when started")]
+        [SerializeField]
+        private Transform _trackingTarget;
+
         private List<ParallaxLayer> _layers = new List<ParallaxLayer>();
 
         [Tooltip("Override settings for what is considered the furthest layer")]
@@ -131,7 +135,11 @@ namespace Adnc.QuickParallax {
         /// </summary>
         /// <returns></returns>
         protected virtual Transform GetTrackedTransform () {
-            return Camera.main.transform;
+            if (_trackingTarget == null) {
+                return Camera.main.transform;
+            }
+
+            return _trackingTarget;
         }
 
         private void OnDestroy () {
