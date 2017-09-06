@@ -137,9 +137,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _debug: 0
   _relativeSpeed:
-    _value: {x: 2, y: 1}
-    _variable: {fileID: 114812469247843740, guid: 8322e0c2917ea400b85433945272396e,
-      type: 2}
+    _value: {x: 1, y: 1}
+    _variable: {fileID: 0}
 --- !u!4 &329371772
 Transform:
   m_ObjectHideFlags: 0
@@ -147,7 +146,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 329371770}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 7.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -269,7 +268,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb727e9b3a6ee4183ba2ea97288ec829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoInit: 0
+  _autoInit: 1
+  _furthestLayer:
+    _overrideMaxDistance: 0
+    _maxDistance: 0
+    maxSpeed:
+      _value: {x: 0, y: 10}
+      _variable: {fileID: 0}
+  _closestLayer:
+    _overrideMaxDistance: 0
+    _maxDistance: 0
+    maxSpeed:
+      _value: {x: 0, y: -2}
+      _variable: {fileID: 0}
 --- !u!4 &1958243146
 Transform:
   m_ObjectHideFlags: 0

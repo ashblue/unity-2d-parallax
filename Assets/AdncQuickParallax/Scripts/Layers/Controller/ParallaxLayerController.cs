@@ -56,6 +56,19 @@ namespace Adnc.QuickParallax {
 
         IEnumerator LoopLayers () {
             yield return null;
+
+            var prevPos = _trackedTransform.position;
+
+            while (true) {
+                var change = _trackedTransform.position - prevPos;
+                prevPos = _trackedTransform.position;
+
+                foreach (var parallaxLayer in _layers) {
+                    parallaxLayer.ParallaxUpdate(change);
+                }
+
+                yield return null;
+            }
         }
 
         public void Stop () {

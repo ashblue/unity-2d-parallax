@@ -40,7 +40,15 @@ namespace Adnc.QuickParallax {
 		}
 
 		public void ParallaxUpdate (Vector2 change) {
+			var speed = new Vector2(
+				moveSpeed.x * _relativeSpeed.Value.x,
+				moveSpeed.y * _relativeSpeed.Value.y);
 
+			var pos = transform.position;
+			pos.x += change.x * speed.x;
+			pos.y += change.y * speed.y;
+
+			transform.position = pos;
 		}
 	}
 }
