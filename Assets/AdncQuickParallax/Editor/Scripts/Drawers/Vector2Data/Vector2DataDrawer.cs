@@ -23,13 +23,13 @@ namespace Adnc.QuickParallax.Editors.Drawers {
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 			// Draw label
-			var rectLabel = position;
+			var rectLabel = EditorGUI.IndentedRect(position);
 			rectLabel.width = EditorGUIUtility.labelWidth;
 
 			GUI.Label(rectLabel, label);
 
 			// Draw Menu
-			var rectMenu = position;
+			var rectMenu = EditorGUI.IndentedRect(position);
 			rectMenu.height = EditorGUIUtility.singleLineHeight;
 			rectMenu.width -= rectLabel.width;
 			rectMenu.x += rectLabel.width;
@@ -48,9 +48,9 @@ namespace Adnc.QuickParallax.Editors.Drawers {
 			if (propVar.objectReferenceValue != null) return;
 
 			var propVector2 = property.FindPropertyRelative(PROP_VECTOR2_NAME);
-			var rectVector2 = position;
-			rectVector2.x += EditorGUIUtility.labelWidth;
-			rectVector2.width -= EditorGUIUtility.labelWidth;
+			var rectVector2 = EditorGUI.IndentedRect(position);
+			rectVector2.x += rectLabel.width;
+			rectVector2.width -= rectLabel.width;
 			rectVector2.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
 			EditorGUI.PropertyField(rectVector2, propVector2, GUIContent.none);

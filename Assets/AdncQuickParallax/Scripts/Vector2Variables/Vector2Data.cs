@@ -11,6 +11,19 @@ namespace Adnc.QuickParallax {
 		[SerializeField]
 		private Vector2Variable _variable;
 
+		// Unity deserialization
+		public Vector2Data () {}
+
+		/// <summary>
+		/// Constructor that sets the default `Vector2(x, y)` properties
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		public Vector2Data (float x, float y) {
+			_value.x = x;
+			_value.y = y;
+		}
+
 		public Vector2 Value {
 			get {
 				if (_variable == null) {

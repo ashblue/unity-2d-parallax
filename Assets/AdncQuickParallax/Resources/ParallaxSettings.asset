@@ -26,7 +26,7 @@ MonoBehaviour:
   m_Name: Vector2Variable
   m_EditorClassIdentifier: 
   _value: {x: 0, y: 0}
-  _displayName: Zero
+  _displayName: Distance/Zero
 --- !u!114 &114812469247843740
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39,4 +39,4 @@ MonoBehaviour:
   m_Name: Vector2Variable
   m_EditorClassIdentifier: 
   _value: {x: 4, y: 4}
-  _displayName: Distant
+  _displayName: Distance/Distant
