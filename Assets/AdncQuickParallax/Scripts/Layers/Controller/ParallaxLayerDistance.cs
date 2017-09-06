@@ -8,12 +8,12 @@ namespace Adnc.QuickParallax {
     public class ParallaxLayerDistance {
         [Tooltip("Override the max element's distance (Z axis). Doing so will calculate all speeds relative to that instead of the max element.")]
         [SerializeField]
-        private bool _overrideMaxDistance;
+        public bool overrideMaxDistance;
 
         [ShowToggle("_overrideMaxDistance")]
         [Tooltip("Manually inject distance of the max element")]
         [SerializeField]
-        private float _maxDistance;
+        public float maxDistance;
 
         [Tooltip("Speed of the max parallax layer. All background parallaxing speeds will be relative to this")]
         [SerializeField]
@@ -38,8 +38,8 @@ namespace Adnc.QuickParallax {
         void SetSpeeds (List<ParallaxLayer> layers) {
             if (layers.Count == 0) return;
 
-            var distance = _maxDistance;
-            if (!_overrideMaxDistance) {
+            var distance = maxDistance;
+            if (!overrideMaxDistance) {
                 distance = layers.Last().transform.position.z;
             }
 

@@ -22,6 +22,11 @@ namespace Adnc.QuickParallax {
 
 		public float Distance {
 			get { return transform.position.z; }
+			set {
+				var pos = transform.position;
+				pos.z = value;
+				transform.position = pos;
+			}
 		}
 
 		private void Awake () {
