@@ -10,7 +10,7 @@ namespace Adnc.QuickParallax {
         [SerializeField]
         public bool overrideMaxDistance;
 
-        [ShowToggle("_overrideMaxDistance")]
+        [ShowToggle("overrideMaxDistance")]
         [Tooltip("Manually inject distance of the max element")]
         [SerializeField]
         public float maxDistance;

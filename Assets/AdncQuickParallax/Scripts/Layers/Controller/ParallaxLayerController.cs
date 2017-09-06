@@ -22,11 +22,11 @@ namespace Adnc.QuickParallax {
 
         [Tooltip("Override settings for what is considered the furthest layer")]
         [SerializeField]
-        private ParallaxLayerDistance _furthestLayer = new ParallaxLayerDistance { maxSpeed = new Vector2Data(10, 0) };
+        private ParallaxLayerDistance _furthestLayer = new ParallaxLayerDistance { maxSpeed = new Vector2Data(1, 0) };
 
         [Tooltip("Override settings for what is considered the closest layer")]
         [SerializeField]
-        private ParallaxLayerDistance _closestLayer = new ParallaxLayerDistance { maxSpeed = new Vector2Data(-2, 0) };
+        private ParallaxLayerDistance _closestLayer = new ParallaxLayerDistance { maxSpeed = new Vector2Data(-0.2f, 0) };
 
         public static ParallaxLayerController Current {
             get { return _current; }
