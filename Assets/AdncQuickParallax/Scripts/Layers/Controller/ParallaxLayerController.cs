@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Adnc.Utility;
 using UnityEngine;
 
 namespace Adnc.QuickParallax {
@@ -53,6 +50,7 @@ namespace Adnc.QuickParallax {
         }
 
         public void Play () {
+            Stop();
             Setup();
 
             _loopLayers = StartCoroutine(LoopLayers());
@@ -85,12 +83,10 @@ namespace Adnc.QuickParallax {
         /// <summary>
         /// Resets everything to factory default and runs Stop.
         /// </summary>
-        private void Reset () {
+        public void Reset () {
             Stop();
             _layers.Clear();
             _isSetup = false;
-
-            OnReset();
         }
 
         public void AddLayer (ParallaxLayer layer) {
@@ -101,8 +97,6 @@ namespace Adnc.QuickParallax {
 
             _layers.Add(layer);
         }
-
-        protected virtual void OnReset () {}
 
         private void Setup () {
             if (_isSetup) {
