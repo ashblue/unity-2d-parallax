@@ -10,6 +10,10 @@ namespace Adnc.QuickParallax {
         private bool _isSetup;
         private Transform _trackedTransform;
 
+        [Tooltip("Enable debug mode for all layers")]
+        [SerializeField]
+        private bool _debug;
+
         [Tooltip("Automatically setup this parallax system when it's activated")]
         [SerializeField]
         bool _autoInit = true;
@@ -30,6 +34,10 @@ namespace Adnc.QuickParallax {
 
         public static ParallaxLayerController Current {
             get { return _current; }
+        }
+
+        public bool DebugEnabled {
+            get { return _debug; }
         }
 
         private void Awake () {

@@ -349,10 +349,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2a1941d439a47af9bd0b30be2e825a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debug: 0
   _relativeSpeed:
     _value: {x: 1, y: 1}
     _variable: {fileID: 0}
+  _debug: 0
+  _overrideDebugColor: 0
+  _debugColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &803357322
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -584,10 +586,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2a1941d439a47af9bd0b30be2e825a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debug: 0
   _relativeSpeed:
     _value: {x: 1, y: 1}
     _variable: {fileID: 0}
+  _debug: 0
+  _overrideDebugColor: 0
+  _debugColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &1560818084
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -671,10 +675,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2a1941d439a47af9bd0b30be2e825a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debug: 0
   _relativeSpeed:
     _value: {x: 1, y: 1}
     _variable: {fileID: 0}
+  _debug: 0
+  _overrideDebugColor: 0
+  _debugColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &1615044951
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -906,6 +912,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb727e9b3a6ee4183ba2ea97288ec829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _debug: 0
   _autoInit: 1
   _trackingTarget: {fileID: 702867622}
   _furthestLayer:
@@ -975,10 +982,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2a1941d439a47af9bd0b30be2e825a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _debug: 0
   _relativeSpeed:
     _value: {x: 1, y: 1}
     _variable: {fileID: 0}
+  _debug: 0
+  _overrideDebugColor: 0
+  _debugColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2065821221
 GameObject:
   m_ObjectHideFlags: 0

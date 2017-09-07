@@ -8,6 +8,9 @@ namespace Adnc.QuickParallax {
 		private static ParallaxSettings _current;
 		private const string RESOURCE_PATH = "ParallaxSettings";
 
+		[Tooltip("Color used to print visual debug data")]
+		public Color debugColor = Color.magenta;
+
 		[HideInInspector]
 		[SerializeField]
 		private List<Vector2Variable> _vector2Variables = new List<Vector2Variable>();
