@@ -37,6 +37,9 @@ namespace Adnc.QuickParallax {
 		[SerializeField]
 		private Color _debugColor = Color.cyan;
 
+		public event System.Action<ParallaxLayer> TriggerSetup;
+		public event System.Action<ParallaxLayer> TriggerUpdate;
+
 		public bool DebugEnabled {
 			get {
 				return _debug || ParallaxLayerController.Current.DebugEnabled;
@@ -92,16 +95,14 @@ namespace Adnc.QuickParallax {
 
 			transform.position = pos;
 
-			foreach (var module in modules) {
-				module.UpdateModule();
-			}
+			if (TriggerUpdate != null) TriggerUpdate.Invoke(this);
 		}
 
 		public void Setup () {
 			if (_isSetup) return;
 
 			_isSetup = true;
-			modules.ForEach(m => m.Setup());
+			if (TriggerSetup != null) TriggerSetup.Invoke(this);
 		}
 
 		private void OnDrawGizmos () {
