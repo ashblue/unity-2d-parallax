@@ -9,6 +9,7 @@ namespace Adnc.QuickParallax {
 		private Vector3 _originPosition;
 
 		[Tooltip("If the sprite is left blank the layer will attempt to automatically find a child element")]
+		[SerializeField]
 		private SpriteRenderer _sprite;
 
 		// Speed at which this layer moves (assigned via controller)
@@ -39,6 +40,10 @@ namespace Adnc.QuickParallax {
 
 		public event System.Action<ParallaxLayer> TriggerSetup;
 		public event System.Action<ParallaxLayer> TriggerUpdate;
+
+		public SpriteRenderer SpriteData {
+			get { return _sprite; }
+		}
 
 		public bool DebugEnabled {
 			get {
@@ -98,6 +103,14 @@ namespace Adnc.QuickParallax {
 			if (TriggerUpdate != null) TriggerUpdate.Invoke(this);
 		}
 
+		public Bounds GetBounds () {
+			if (_sprite == null) {
+				return new Bounds(transform.position, Vector3.zero);
+			}
+
+			return _sprite.bounds;
+		}
+
 		public void Setup () {
 			if (_isSetup) return;
 
@@ -106,7 +119,7 @@ namespace Adnc.QuickParallax {
 		}
 
 		private void OnDrawGizmos () {
-			if (!Application.isPlaying || !DebugEnabled) {
+			if (!DebugEnabled) {
 				return;
 			}
 
@@ -123,7 +136,7 @@ namespace Adnc.QuickParallax {
 		}
 
 		private void OnDrawGizmosSelected () {
-			if (!Application.isPlaying || !DebugEnabled) {
+			if (!DebugEnabled) {
 				return;
 			}
 

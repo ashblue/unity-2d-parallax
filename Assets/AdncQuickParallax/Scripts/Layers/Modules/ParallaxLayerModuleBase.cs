@@ -3,12 +3,11 @@ using UnityEngine;
 
 namespace Adnc.QuickParallax.Modules {
     public abstract class ParallaxLayerModuleBase : MonoBehaviour {
-        // @TODO This needs to be able to target multiple child layers, could this be done with an event that fires update?
         [Tooltip("Leave blank to auto-retrieve the corresponding layer")]
         [SerializeField]
         private ParallaxLayer[] _layers;
 
-        private void Awake () {
+        protected virtual void Awake () {
             if (_layers == null || _layers.Length == 0) {
                 _layers = GetComponentsInChildren<ParallaxLayer>();
             }
