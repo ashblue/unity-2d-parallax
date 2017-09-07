@@ -91,6 +91,10 @@ namespace Adnc.QuickParallax {
 			pos.y += change.y * speed.y;
 
 			transform.position = pos;
+
+			foreach (var module in modules) {
+				module.UpdateModule();
+			}
 		}
 
 		public void Setup () {

@@ -117,7 +117,9 @@ namespace Adnc.QuickParallax {
             _furthestLayer.SetSpeedByFurthest(_layers);
             _closestLayer.SetSpeedByClosest(_layers);
 
-            _layers.ForEach(l => l.Setup());
+            foreach (var parallaxLayer in _layers) {
+                parallaxLayer.Setup();
+            }
 
             OnSetup();
         }
