@@ -104,12 +104,6 @@ namespace Adnc.QuickParallax.Modules {
             }
 
             layer.transform.position = pos;
-
-            // If we have a boundary
-            // Check if any edge of the layer overflows outside of the boundary
-//            if (layer.SpriteData != null) {
-//
-//            }
         }
 
         // @TODO Color should be settable from settings

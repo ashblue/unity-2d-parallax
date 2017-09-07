@@ -47,7 +47,7 @@ namespace Adnc.QuickParallax {
 
 		public bool DebugEnabled {
 			get {
-				return _debug || ParallaxLayerController.Current.DebugEnabled;
+				return _debug || (ParallaxLayerController.Current != null && ParallaxLayerController.Current.DebugEnabled);
 			}
 		}
 
