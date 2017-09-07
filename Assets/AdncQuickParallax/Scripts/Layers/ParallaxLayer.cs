@@ -1,8 +1,11 @@
-﻿using Adnc.Utility;
+﻿using System.Collections.Generic;
+using Adnc.QuickParallax.Modules;
+using Adnc.Utility;
 using UnityEngine;
 
 namespace Adnc.QuickParallax {
 	public class ParallaxLayer : MonoBehaviour {
+		private bool _isSetup;
 		private Vector3 _originPosition;
 
 		[Tooltip("If the sprite is left blank the layer will attempt to automatically find a child element")]
@@ -11,6 +14,9 @@ namespace Adnc.QuickParallax {
 		// Speed at which this layer moves (assigned via controller)
 		[System.NonSerialized]
 		public Vector2 moveSpeed;
+
+		[System.NonSerialized]
+		public List<ParallaxLayerModuleBase> modules = new List<ParallaxLayerModuleBase>();
 
 		[Tooltip("Set the speed relative to the automatically assigned value. 0x0 means no movement, 1x1 means move at the assigned speed.")]
 		[SerializeField]
@@ -85,6 +91,13 @@ namespace Adnc.QuickParallax {
 			pos.y += change.y * speed.y;
 
 			transform.position = pos;
+		}
+
+		public void Setup () {
+			if (_isSetup) return;
+
+			_isSetup = true;
+			modules.ForEach(m => m.Setup());
 		}
 
 		private void OnDrawGizmos () {
