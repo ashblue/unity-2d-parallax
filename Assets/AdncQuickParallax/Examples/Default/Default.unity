@@ -1014,7 +1014,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2020533853}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.6, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 803357320}
@@ -1036,13 +1036,13 @@ MonoBehaviour:
   _layers: []
   _offset: {x: 0, y: 0}
   _limitXMin: 1
-  _xMin: 18.04
+  _xMin: 27.5
   _limitXMax: 1
-  _xMax: 62.09
+  _xMax: 50.03
   _limitYMin: 1
-  _yMin: 23.18
+  _yMin: 42.34
   _limitYMax: 1
-  _yMax: 25.9
+  _yMax: 40.8
 --- !u!1 &2065821221
 GameObject:
   m_ObjectHideFlags: 0

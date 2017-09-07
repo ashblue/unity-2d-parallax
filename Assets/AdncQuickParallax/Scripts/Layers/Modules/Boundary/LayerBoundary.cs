@@ -70,11 +70,16 @@ namespace Adnc.QuickParallax.Modules {
         }
 
         Bounds GetBounds () {
-            var bounds = new Bounds(transform.position, new Vector2(Width, Height));
-            var pos = bounds.center;
+            return UpdateBounds(new Bounds());
+        }
+
+        Bounds UpdateBounds (Bounds bounds) {
+            var pos = transform.position;
             pos.x += _offset.x + (XMax - XMin) / 2;
             pos.y += _offset.y + (YMax - YMin) / 2;
             bounds.center = pos;
+
+            bounds.size = new Vector2(Width, Height);
 
             return bounds;
         }
@@ -82,7 +87,7 @@ namespace Adnc.QuickParallax.Modules {
         // @TODO make sure this works on layers without a sprite
         protected override void OnUpdateModule (ParallaxLayer layer) {
             // @TODO Recycle bounds if possible (seems to crash on size change)
-            _bounds = GetBounds();
+            _bounds = UpdateBounds(_bounds);
 
             var pos = layer.transform.position;
             var b = layer.GetBounds();
