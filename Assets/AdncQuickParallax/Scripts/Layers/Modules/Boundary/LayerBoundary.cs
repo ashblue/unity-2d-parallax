@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Adnc.QuickParallax.Modules {
-    public class LayerBoundary : ParallaxLayerModuleBase {
+    public class LayerBoundary : ParallaxLayerModuleMultiBase {
         private Bounds _bounds;
 
         [Tooltip("The center of the boundary")]

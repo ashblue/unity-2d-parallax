@@ -3,21 +3,15 @@ using UnityEngine;
 
 namespace Adnc.QuickParallax.Modules {
     public abstract class ParallaxLayerModuleBase : MonoBehaviour {
-        [Tooltip("Leave blank to auto-retrieve the corresponding layer")]
-        [SerializeField]
-        private ParallaxLayer[] _layers;
+        public abstract List<ParallaxLayer> Layers { get; protected set; }
 
         protected virtual void Awake () {
-            if (_layers == null || _layers.Length == 0) {
-                _layers = GetComponentsInChildren<ParallaxLayer>();
-            }
-
-            if (_layers == null || _layers.Length == 0) {
+            if (Layers == null || Layers.Count == 0) {
                 Debug.LogError("A ParallaxLayer is required to use this module");
                 return;
             }
 
-            foreach (var layer in _layers) {
+            foreach (var layer in Layers) {
                 layer.TriggerSetup += Setup;
                 layer.TriggerUpdate += UpdateModule;
             }
@@ -27,6 +21,10 @@ namespace Adnc.QuickParallax.Modules {
             OnSetup(layer);
         }
 
+        /// <summary>
+        /// Triggered once when a layer is initially setup
+        /// </summary>
+        /// <param name="layer"></param>
         protected virtual void OnSetup (ParallaxLayer layer) {
         }
 
@@ -34,6 +32,10 @@ namespace Adnc.QuickParallax.Modules {
             OnUpdateModule(layer);
         }
 
+        /// <summary>
+        /// Triggered each frame after a layer has been moved with the camera
+        /// </summary>
+        /// <param name="layer"></param>
         protected virtual void OnUpdateModule (ParallaxLayer layer) {
         }
     }
