@@ -26,7 +26,7 @@ namespace Adnc.QuickParallax.Modules {
 
         public void UpdateBuddy () {
             if (!IsVisible) {
-                Debug.Log("Send to graveyard");
+                _ctrl.AddToGraveyard(this);
                 return;
             }
 
@@ -34,6 +34,9 @@ namespace Adnc.QuickParallax.Modules {
             // If not fill them
         }
 
+        /// <summary>
+        /// Triggered each time this element goes into the recycling bin
+        /// </summary>
         public void Recycle () {
             gameObject.SetActive(false);
         }

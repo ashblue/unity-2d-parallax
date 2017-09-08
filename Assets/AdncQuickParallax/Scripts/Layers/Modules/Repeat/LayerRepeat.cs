@@ -9,6 +9,7 @@ namespace Adnc.QuickParallax.Modules {
         private Dictionary<Vector2Int, LayerRepeatBuddy> _buddyCache = new Dictionary<Vector2Int, LayerRepeatBuddy>();
         private List<LayerRepeatBuddy> _buddyActive = new List<LayerRepeatBuddy>();
         private List<LayerRepeatBuddy> _buddyRecycle = new List<LayerRepeatBuddy>();
+        List<LayerRepeatBuddy> _buddyGraveyard = new List<LayerRepeatBuddy>();
 
         private CameraBoundary _viewBoundary = new CameraBoundary();
 
@@ -34,6 +35,15 @@ namespace Adnc.QuickParallax.Modules {
         protected override void OnUpdateModule (ParallaxLayer layer) {
             var camBounds = _viewBoundary.GetBounds();
             var graphicBounds = layer.GetBounds();
+
+            // Update graveyard first to prevent pops in textures
+            if (_buddyGraveyard.Count > 0) {
+                foreach (var buddy in _buddyGraveyard) {
+                    RemoveBuddy(buddy);
+                }
+
+                _buddyGraveyard.Clear();
+            }
 
             // If no visible layer buddies, repopulate center buddy
             if (_buddyActive.Count == 0) {
@@ -75,6 +85,10 @@ namespace Adnc.QuickParallax.Modules {
 
         bool HasBuddy (Vector2Int key) {
             return _buddyCache.ContainsKey(key);
+        }
+
+        public void AddToGraveyard (LayerRepeatBuddy buddy) {
+            _buddyGraveyard.Add(buddy);
         }
 
         public Vector3 GetWorldPosition (Vector2Int key, float z = 0) {
