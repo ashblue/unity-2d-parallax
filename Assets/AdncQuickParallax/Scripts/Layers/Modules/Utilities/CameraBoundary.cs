@@ -4,15 +4,18 @@ using UnityEngine;
 namespace Adnc.QuickParallax.Modules.Utilities {
     public class CameraBoundary {
         private int _frameCache;
-        private Bounds _bounds;
+        private Bounds _bounds = new Bounds();
 
         void UpdateBoundary () {
             var cam = Camera.main;
+
             var vertExtent = cam.orthographicSize;
             var horzExtent = vertExtent * Screen.width / Screen.height;
+            _bounds.size = new Vector3(horzExtent * 2, vertExtent * 2, 100);
 
-            _bounds.size = new Vector3(horzExtent, vertExtent);
-            _bounds.center = cam.transform.position;
+            var pos = cam.transform.position;
+            pos.z = 0;
+            _bounds.center = pos;
         }
 
         public Bounds GetBounds () {
@@ -22,6 +25,14 @@ namespace Adnc.QuickParallax.Modules.Utilities {
             }
 
             return _bounds;
+        }
+
+        public void GizmoDrawBoundary () {
+            if (Application.isPlaying) {
+                var b = GetBounds();
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireCube(b.center, b.size);
+            }
         }
     }
 }

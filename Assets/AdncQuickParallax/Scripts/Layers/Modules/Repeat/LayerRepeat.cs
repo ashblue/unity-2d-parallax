@@ -10,7 +10,7 @@ namespace Adnc.QuickParallax.Modules {
         private List<LayerRepeatBuddy> _buddyActive = new List<LayerRepeatBuddy>();
         private List<LayerRepeatBuddy> _buddyRecycle = new List<LayerRepeatBuddy>();
 
-        private CameraBoundary _boundary = new CameraBoundary();
+        private CameraBoundary _viewBoundary = new CameraBoundary();
 
         private SpriteRenderer _sprite;
 
@@ -20,6 +20,10 @@ namespace Adnc.QuickParallax.Modules {
         [SerializeField]
         private LayerRepeatType _repeat;
 
+        public CameraBoundary ViewBoundary {
+            get { return _viewBoundary; }
+        }
+
         protected override void OnSetup (ParallaxLayer layer) {
             _sprite = layer.SpriteData;
             Debug.Assert(_sprite != null, "Layer must have a sprite in order to repeat a graphic.");
@@ -28,26 +32,19 @@ namespace Adnc.QuickParallax.Modules {
         }
 
         protected override void OnUpdateModule (ParallaxLayer layer) {
-            var camBounds = _boundary.GetBounds();
+            var camBounds = _viewBoundary.GetBounds();
             var graphicBounds = layer.GetBounds();
 
-            // Update all layer buddies
             // If no visible layer buddies, repopulate center buddy
-            if (_buddyActive.Count != 0) return;
+            if (_buddyActive.Count == 0) {
+                // Determine the current camera center index relative
+                var centerKey = WorldToAxisKey(graphicBounds, camBounds.center);
+                AddBuddy(centerKey);
+            }
 
-            // Determine the current camera center index relative
-            var centerKey = WorldToAxisKey(graphicBounds, camBounds.center);
-            AddBuddy(centerKey);
-
-            // New buddy is responsible for populating all nearby buddies
-
-            // ***** NOTES
-            // Determine the index of the visible units
-            // * Calculate by figuring out the number of units relative to the origin
-            // * Turn min and max camera boundaries into an index range for x and y
-            // Put all non-visible elements in recycling
-
-            // Place visible units on-screen
+            foreach (var b in _buddyActive) {
+                b.UpdateBuddy();
+            }
         }
 
         void AddBuddy (Vector2Int key) {
@@ -101,6 +98,10 @@ namespace Adnc.QuickParallax.Modules {
             var unitsY = headingY > 0 ? Mathf.FloorToInt(unitsYRaw) : Mathf.CeilToInt(unitsYRaw);
 
             return new Vector2Int(unitsX, unitsY);
+        }
+
+        private void OnDrawGizmosSelected () {
+            _viewBoundary.GizmoDrawBoundary();
         }
     }
 }
