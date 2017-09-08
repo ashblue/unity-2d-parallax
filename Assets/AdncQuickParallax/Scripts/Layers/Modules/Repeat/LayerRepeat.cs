@@ -22,6 +22,8 @@ namespace Adnc.QuickParallax.Modules {
 
         protected override void OnSetup (ParallaxLayer layer) {
             _sprite = layer.SpriteData;
+            Debug.Assert(_sprite != null, "Layer must have a sprite in order to repeat a graphic.");
+            Debug.Assert(_sprite.transform.IsChildOf(layer.transform), "Repeat image must be a child of the ParallaxLayer");
             _sprite.gameObject.SetActive(false);
         }
 
