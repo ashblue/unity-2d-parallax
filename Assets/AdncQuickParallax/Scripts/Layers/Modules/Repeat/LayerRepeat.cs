@@ -25,6 +25,10 @@ namespace Adnc.QuickParallax.Modules {
             get { return _viewBoundary; }
         }
 
+        public LayerRepeatType Repeat {
+            get { return _repeat; }
+        }
+
         protected override void OnSetup (ParallaxLayer layer) {
             _sprite = layer.SpriteData;
             Debug.Assert(_sprite != null, "Layer must have a sprite in order to repeat a graphic.");
@@ -52,12 +56,12 @@ namespace Adnc.QuickParallax.Modules {
                 AddBuddy(centerKey);
             }
 
-            foreach (var b in _buddyActive) {
-                b.UpdateBuddy();
+            for (var i = 0; i < _buddyActive.Count; i++) {
+                _buddyActive[i].UpdateBuddy();
             }
         }
 
-        void AddBuddy (Vector2Int key) {
+        public void AddBuddy (Vector2Int key) {
             if (HasBuddy(key)) {
                 return;
             }
@@ -83,12 +87,17 @@ namespace Adnc.QuickParallax.Modules {
             _buddyRecycle.Add(buddy);
         }
 
-        bool HasBuddy (Vector2Int key) {
+        public bool HasBuddy (Vector2Int key) {
             return _buddyCache.ContainsKey(key);
         }
 
         public void AddToGraveyard (LayerRepeatBuddy buddy) {
             _buddyGraveyard.Add(buddy);
+        }
+
+        public Bounds GetTileBounds (Vector2Int key) {
+            var pos = GetWorldPosition(key);
+            return new Bounds(pos, _sprite.bounds.size);
         }
 
         public Vector3 GetWorldPosition (Vector2Int key, float z = 0) {

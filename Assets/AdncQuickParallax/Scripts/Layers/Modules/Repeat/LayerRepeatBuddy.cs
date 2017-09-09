@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Adnc.QuickParallax.Modules {
     public class LayerRepeatBuddy : MonoBehaviour {
         private SpriteRenderer _image;
         private LayerRepeat _ctrl;
+        private List<Vector2Int> _neighbors;
         public Vector2Int Id { get; private set; }
 
         public bool IsVisible {
@@ -16,6 +18,7 @@ namespace Adnc.QuickParallax.Modules {
             _ctrl = ctrl;
             Id = id;
 
+            _neighbors = GetNeighbors();
             _image = GetComponent<SpriteRenderer>();
 
             transform.SetParent(ctrl.transform);
@@ -24,14 +27,22 @@ namespace Adnc.QuickParallax.Modules {
             gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// Polled from the parent LayerRepeat class
+        /// </summary>
         public void UpdateBuddy () {
             if (!IsVisible) {
                 _ctrl.AddToGraveyard(this);
                 return;
             }
 
-            // @TODO Check if nearby slots are filled
-            // If not fill them
+            foreach (var key in _neighbors) {
+                if (_ctrl.HasBuddy(key)) continue;
+
+                if (_ctrl.GetTileBounds(key).Intersects(_ctrl.ViewBoundary.GetBounds())) {
+                    _ctrl.AddBuddy(key);
+                }
+            }
         }
 
         /// <summary>
@@ -42,8 +53,25 @@ namespace Adnc.QuickParallax.Modules {
         }
 
         private void OnDrawGizmosSelected () {
+            // @TODO Should only paint if layer debug is true
             Gizmos.color = ParallaxSettings.Current.tileColor;
             Gizmos.DrawWireCube(_image.bounds.center, _image.bounds.size);
+        }
+
+        List<Vector2Int> GetNeighbors () {
+            var neighbors = new List<Vector2Int>();
+
+            if (_ctrl.Repeat == LayerRepeatType.XAxis || _ctrl.Repeat == LayerRepeatType.Both) {
+                neighbors.Add(new Vector2Int(Id.x - 1, Id.y));
+                neighbors.Add(new Vector2Int(Id.x + 1, Id.y));
+            }
+
+            if (_ctrl.Repeat == LayerRepeatType.YAxis || _ctrl.Repeat == LayerRepeatType.Both) {
+                neighbors.Add(new Vector2Int(Id.x, Id.y - 1));
+                neighbors.Add(new Vector2Int(Id.x, Id.y + 1));
+            }
+
+            return neighbors;
         }
     }
 }
