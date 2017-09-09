@@ -321,34 +321,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
---- !u!1 &702867621
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 702867622}
-  m_Layer: 0
-  m_Name: TrackingPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &702867622
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 702867621}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1958243146}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &797411646
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _layer: {fileID: 0}
-  _repeat: 0
+  _repeat: 2
 --- !u!1 &1045135437
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,13 +510,14 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1071657773}
+  - component: {fileID: 1071657774}
   m_Layer: 0
   m_Name: Scenery
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1071657773
 Transform:
   m_ObjectHideFlags: 0
@@ -558,8 +531,34 @@ Transform:
   - {fileID: 797411647}
   - {fileID: 1744808538}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1071657774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1071657772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb727e9b3a6ee4183ba2ea97288ec829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debug: 1
+  _autoInit: 1
+  _trackingTarget: {fileID: 0}
+  _furthestLayer:
+    overrideMaxDistance: 0
+    maxDistance: 0
+    maxSpeed:
+      _value: {x: 1, y: 1}
+      _variable: {fileID: 0}
+  _closestLayer:
+    overrideMaxDistance: 0
+    maxDistance: 0
+    maxSpeed:
+      _value: {x: -0.2, y: 0}
+      _variable: {fileID: 0}
 --- !u!1 &1415197620
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,62 +928,6 @@ Transform:
   m_Children:
   - {fileID: 232429717}
   m_Father: {fileID: 797411647}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1958243144
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1958243146}
-  - component: {fileID: 1958243145}
-  m_Layer: 0
-  m_Name: Ctrl
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1958243145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1958243144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb727e9b3a6ee4183ba2ea97288ec829, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _debug: 0
-  _autoInit: 1
-  _trackingTarget: {fileID: 0}
-  _furthestLayer:
-    overrideMaxDistance: 0
-    maxDistance: 0
-    maxSpeed:
-      _value: {x: 1, y: 1}
-      _variable: {fileID: 0}
-  _closestLayer:
-    overrideMaxDistance: 0
-    maxDistance: 0
-    maxSpeed:
-      _value: {x: -0.2, y: 0}
-      _variable: {fileID: 0}
---- !u!4 &1958243146
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1958243144}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 702867622}
-  m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1992339786

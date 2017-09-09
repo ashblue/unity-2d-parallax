@@ -57,6 +57,17 @@ namespace Adnc.QuickParallax {
             }
         }
 
+        private void OnEnable () {
+            // Let Start() run the first instance instead of OnEnable
+            if (_autoInit && _isSetup) {
+                Play();
+            }
+        }
+
+        private void OnDisable () {
+            Stop();
+        }
+
         public void Play () {
             Stop();
             Setup();
@@ -65,8 +76,6 @@ namespace Adnc.QuickParallax {
         }
 
         IEnumerator LoopLayers () {
-            yield return null;
-
             var prevPos = _trackedTransform.position;
 
             while (true) {

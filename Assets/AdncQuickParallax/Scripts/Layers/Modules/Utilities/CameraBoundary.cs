@@ -9,6 +9,8 @@ namespace Adnc.QuickParallax.Modules.Utilities {
         void UpdateBoundary () {
             var cam = Camera.main;
 
+            if (cam == null) return;
+
             var vertExtent = cam.orthographicSize;
             var horzExtent = vertExtent * Screen.width / Screen.height;
             _bounds.size = new Vector3(horzExtent * 2, vertExtent * 2, 100);
