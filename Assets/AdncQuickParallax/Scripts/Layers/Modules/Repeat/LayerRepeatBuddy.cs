@@ -52,10 +52,11 @@ namespace Adnc.QuickParallax.Modules {
             gameObject.SetActive(false);
         }
 
-        private void OnDrawGizmosSelected () {
-            // @TODO Should only paint if layer debug is true
-            Gizmos.color = ParallaxSettings.Current.tileColor;
-            Gizmos.DrawWireCube(_image.bounds.center, _image.bounds.size);
+        private void OnDrawGizmos () {
+            if (_ctrl.IsDebug) {
+                Gizmos.color = ParallaxSettings.Current.tileColor;
+                Gizmos.DrawWireCube(_image.bounds.center, _image.bounds.size);
+            }
         }
 
         List<Vector2Int> GetNeighbors () {

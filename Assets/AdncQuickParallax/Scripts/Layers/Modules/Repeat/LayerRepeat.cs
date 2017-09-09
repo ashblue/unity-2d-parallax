@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using Adnc.QuickParallax.Modules.Utilities;
 using Adnc.Utility;
 using UnityEngine;
 
 namespace Adnc.QuickParallax.Modules {
     public class LayerRepeat : ParallaxLayerModuleSingleBase {
+        private bool _isDebug;
+
+        const int X_ORIGIN = 0;
+        const int Y_ORIGIN = 0;
+
         private Dictionary<Vector2Int, LayerRepeatBuddy> _buddyCache = new Dictionary<Vector2Int, LayerRepeatBuddy>();
         private List<LayerRepeatBuddy> _buddyActive = new List<LayerRepeatBuddy>();
         private List<LayerRepeatBuddy> _buddyRecycle = new List<LayerRepeatBuddy>();
@@ -20,6 +25,10 @@ namespace Adnc.QuickParallax.Modules {
         [Tooltip("Repeat elements on the corresponding axis")]
         [SerializeField]
         private LayerRepeatType _repeat;
+
+        public bool IsDebug {
+            get { return _isDebug; }
+        }
 
         public CameraBoundary ViewBoundary {
             get { return _viewBoundary; }
@@ -37,8 +46,7 @@ namespace Adnc.QuickParallax.Modules {
         }
 
         protected override void OnUpdateModule (ParallaxLayer layer) {
-            var camBounds = _viewBoundary.GetBounds();
-            var graphicBounds = layer.GetBounds();
+            _isDebug = layer.DebugEnabled;
 
             // Update graveyard first to prevent pops in textures
             if (_buddyGraveyard.Count > 0) {
@@ -50,14 +58,54 @@ namespace Adnc.QuickParallax.Modules {
             }
 
             // If no visible layer buddies, repopulate center buddy
-            if (_buddyActive.Count == 0) {
+            if (_buddyActive.Count == 0 && IsValidKeyInView(layer)) {
                 // Determine the current camera center index relative
-                var centerKey = WorldToAxisKey(graphicBounds, camBounds.center);
+                var centerKey = GetValidKeyInView(layer);
                 AddBuddy(centerKey);
             }
 
             for (var i = 0; i < _buddyActive.Count; i++) {
                 _buddyActive[i].UpdateBuddy();
+            }
+        }
+
+        bool IsValidKeyInView (ParallaxLayer layer) {
+            var camBounds = _viewBoundary.GetBounds();
+            var bounds = layer.GetBounds();
+
+            switch (_repeat) {
+                case LayerRepeatType.XAxis:
+                    var vertYMin = WorldToAxisKey(bounds, new Vector2(camBounds.center.x, camBounds.min.y));
+                    var vertYMax = WorldToAxisKey(bounds, new Vector2(camBounds.center.x, camBounds.max.y));
+
+                    return vertYMin.y <= Y_ORIGIN && vertYMax.y >= Y_ORIGIN;
+                case LayerRepeatType.YAxis:
+                    var vertXMin = WorldToAxisKey(bounds, new Vector2(camBounds.min.x, camBounds.center.y));
+                    var vertXMax = WorldToAxisKey(bounds, new Vector2(camBounds.max.x, camBounds.center.y));
+
+                    return vertXMin.x <= X_ORIGIN && vertXMax.x >= X_ORIGIN;
+                case LayerRepeatType.Both:
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        Vector2Int GetValidKeyInView (ParallaxLayer layer) {
+            var camBounds = _viewBoundary.GetBounds();
+            var bounds = layer.GetBounds();
+
+            switch (_repeat) {
+                case LayerRepeatType.XAxis:
+                    var vertYMin = WorldToAxisKey(bounds, new Vector2(camBounds.center.x, camBounds.min.y));
+                    return new Vector2Int(vertYMin.x, Y_ORIGIN);
+                case LayerRepeatType.YAxis:
+                    var vertXMin = WorldToAxisKey(bounds, new Vector2(camBounds.min.x, camBounds.center.y));
+                    return new Vector2Int(X_ORIGIN, vertXMin.y);
+                case LayerRepeatType.Both:
+                    return WorldToAxisKey(layer.GetBounds(), _viewBoundary.GetBounds().center);
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -107,20 +155,28 @@ namespace Adnc.QuickParallax.Modules {
             return new Vector3(x, y, z);
         }
 
-        Vector2Int WorldToAxisKey (Bounds origin, Vector2 point) {
+        static Vector2Int WorldToAxisKey (Bounds origin, Vector2 point) {
+            return new Vector2Int(WorldToAxisX(origin, point), WorldToAxisY(origin, point));
+        }
+
+        static int WorldToAxisX (Bounds origin, Vector2 point) {
             var headingX = origin.center.x < point.x ? 1 : -1;
             var originXOffset = headingX > 0 ? -origin.extents.x : origin.extents.x;
             var distanceX = origin.center.x + originXOffset - point.x;
             var unitsXRaw = distanceX / origin.size.x * -1;
             var unitsX = headingX > 0 ? Mathf.FloorToInt(unitsXRaw) : Mathf.CeilToInt(unitsXRaw);
 
+            return unitsX;
+        }
+
+        static int WorldToAxisY (Bounds origin, Vector2 point) {
             var headingY = origin.center.y < point.y ? 1 : -1;
             var originYOffset = headingY > 0 ? -origin.extents.y : origin.extents.y;
             var distanceY = origin.center.y + originYOffset - point.y;
             var unitsYRaw = distanceY / origin.size.y * -1;
             var unitsY = headingY > 0 ? Mathf.FloorToInt(unitsYRaw) : Mathf.CeilToInt(unitsYRaw);
 
-            return new Vector2Int(unitsX, unitsY);
+            return unitsY;
         }
 
         private void OnDrawGizmosSelected () {
