@@ -8,8 +8,11 @@ namespace Adnc.QuickParallax {
 		private static ParallaxSettings _current;
 		private const string RESOURCE_PATH = "ParallaxSettings";
 
-		[Tooltip("Color used to print visual debug data")]
-		public Color debugColor = Color.magenta;
+		[Tooltip("Color used to outline individual sprite tiles")]
+		public Color tileColor = Color.magenta;
+
+		[Tooltip("Color painted around the camera's boundary")]
+		public Color cameraColor = Color.yellow;
 
 		[HideInInspector]
 		[SerializeField]
