@@ -59,7 +59,6 @@ namespace Adnc.QuickParallax {
 		/// </summary>
 		public void SimulateLayersFromOriginToDestination (Vector2 origin, Vector2 destination) {
 			var distance = destination - origin;
-
 			MoveLayers(distance);
 		}
 	}

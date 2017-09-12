@@ -155,10 +155,10 @@ namespace Adnc.QuickParallax {
         /// <returns></returns>
         protected virtual Transform GetTrackedTransform () {
             if (_trackingTarget == null) {
-                return Camera.main.transform;
+                _trackingTarget = Camera.main.transform;
             }
 
-            return _trackingTarget;
+            return _trackingTarget.transform;
         }
 
         private void OnDestroy () {
