@@ -36,6 +36,10 @@ namespace Adnc.QuickParallax {
             get { return _current; }
         }
 
+        public Transform TrackingTarget {
+            get { return _trackingTarget; }
+        }
+
         public bool DebugEnabled {
             get { return _debug; }
         }
