@@ -24,14 +24,6 @@ namespace Adnc.QuickParallax {
 
         private List<ParallaxLayer> _layers = new List<ParallaxLayer>();
 
-        [Tooltip("Override settings for what is considered the furthest layer")]
-        [SerializeField]
-        private ParallaxLayerDistance _furthestLayer = new ParallaxLayerDistance { maxSpeed = new Vector2Data(1, 0) };
-
-        [Tooltip("Override settings for what is considered the closest layer")]
-        [SerializeField]
-        private ParallaxLayerDistance _closestLayer = new ParallaxLayerDistance { maxSpeed = new Vector2Data(-0.2f, 0) };
-
         public static ParallaxLayerController Current {
             get { return _current; }
         }
@@ -127,8 +119,6 @@ namespace Adnc.QuickParallax {
             _isSetup = true;
 
             _trackedTransform = GetTrackedTransform();
-            _furthestLayer.SetSpeedByFurthest(_layers);
-            _closestLayer.SetSpeedByClosest(_layers);
 
             foreach (var parallaxLayer in _layers) {
                 parallaxLayer.Setup();

@@ -15,7 +15,7 @@ namespace Adnc.QuickParallax {
 
         [Test]
         public void ParallaxUpdateMovesBySpeed () {
-            _layer.moveSpeed = Vector2.one;
+            _layer.moveSpeed = new Vector2Data { Value = Vector2.one};
             _layer.ParallaxUpdate(Vector2.one);
 
             Assert.AreEqual(1, _layer.transform.position.x);
