@@ -53,7 +53,7 @@ namespace Adnc.QuickParallax {
 					return _debugColor;
 				}
 
-				return ParallaxSettings.Current.tileColor;
+				return ParallaxSettings.Current.TileColor;
 			}
 		}
 
