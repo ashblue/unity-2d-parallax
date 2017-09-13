@@ -54,7 +54,7 @@ namespace Adnc.QuickParallax.Modules {
 
         private void OnDrawGizmos () {
             if (_ctrl.IsDebug) {
-                Gizmos.color = ParallaxSettings.Current.tileColor;
+                Gizmos.color = ParallaxSettings.Current.TileColor;
                 Gizmos.DrawWireCube(_image.bounds.center, _image.bounds.size);
             }
         }

@@ -45,8 +45,10 @@ namespace Adnc.QuickParallax {
 
             layers.ForEach(layer => {
                 var percent = Mathf.Abs(layer.Distance / distance);
-                layer.moveSpeed.x = percent * maxSpeed.Value.x;
-                layer.moveSpeed.y = percent * maxSpeed.Value.y;
+                var x = percent * maxSpeed.Value.x;
+                var y = percent * maxSpeed.Value.y;
+
+                layer.moveSpeed.SetValue(new Vector2(x, y));
             });
         }
     }

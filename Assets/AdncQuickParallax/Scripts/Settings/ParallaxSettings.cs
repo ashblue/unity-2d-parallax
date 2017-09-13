@@ -9,14 +9,32 @@ namespace Adnc.QuickParallax {
 		private const string RESOURCE_PATH = "ParallaxSettings";
 
 		[Tooltip("Color used to outline individual sprite tiles")]
-		public Color tileColor = Color.magenta;
+		[SerializeField]
+		private Color _tileColor = Color.magenta;
 
 		[Tooltip("Color painted around the camera's boundary")]
-		public Color cameraColor = Color.yellow;
+		[SerializeField]
+		private Color _cameraColor = Color.yellow;
+
+		[Tooltip("Color of outline painted around a boundary")]
+		[SerializeField]
+		public Color _boundaryColor = Color.green;
 
 		[HideInInspector]
 		[SerializeField]
 		private List<Vector2Variable> _vector2Variables = new List<Vector2Variable>();
+
+		public Color TileColor {
+			get { return _tileColor; }
+		}
+
+		public Color CameraColor {
+			get { return _cameraColor; }
+		}
+
+		public Color BoundaryColor {
+			get { return _boundaryColor; }
+		}
 
 		public List<Vector2Variable> Vector2Variables {
 			get { return _vector2Variables; }

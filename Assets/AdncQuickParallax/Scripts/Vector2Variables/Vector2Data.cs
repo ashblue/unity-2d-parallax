@@ -35,6 +35,15 @@ namespace Adnc.QuickParallax {
 
 			set { _value = value; }
 		}
+
+		public void SetValue (Vector2 value) {
+			_variable = null;
+			_value = value;
+		}
+
+		public void SetVariable (Vector2Variable variable) {
+			_variable = variable;
+		}
 	}
 }
 

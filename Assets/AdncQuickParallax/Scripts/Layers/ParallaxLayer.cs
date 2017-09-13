@@ -12,14 +12,10 @@ namespace Adnc.QuickParallax {
 		[SerializeField]
 		private SpriteRenderer _sprite;
 
-		// Speed at which this layer moves (assigned via controller)
-		[System.NonSerialized]
-		public Vector2 moveSpeed;
+		[Tooltip("Speed at which this layer moves. Can be overriden by groups with set relative speed")]
+		public Vector2Data moveSpeed = new Vector2Data { Value = Vector2.one };
 
-		[System.NonSerialized]
-		public List<ParallaxLayerModuleBase> modules = new List<ParallaxLayerModuleBase>();
-
-		[Tooltip("Set the speed relative to the automatically assigned value. 0x0 means no movement, 1x1 means move at the assigned speed.")]
+		[Tooltip("Set the speed relative to the assigned value. 0x0 means no movement, 1x1 means move at the assigned speed.")]
 		[SerializeField]
 		private Vector2Data _relativeSpeed = new Vector2Data { Value = Vector2.one };
 
@@ -57,7 +53,7 @@ namespace Adnc.QuickParallax {
 					return _debugColor;
 				}
 
-				return ParallaxSettings.Current.tileColor;
+				return ParallaxSettings.Current.TileColor;
 			}
 		}
 
@@ -77,8 +73,9 @@ namespace Adnc.QuickParallax {
 				_sprite = GetComponentInChildren<SpriteRenderer>();
 			}
 
+			// @TODO Move this warning to relative parallax setup and off of the layer directly
 			if (Mathf.Abs(transform.position.z) < 0.1f) {
-				Debug.LogWarningFormat("The Z-Index of GameObject {0} is set to 0. Please set the Z-Index to a non-zero number. Distabling parallax on GameObject.", gameObject.name);
+				Debug.LogWarningFormat("The Z-Index of GameObject {0} is set to 0. Please set the Z-Index to a non-zero number. Disabling parallax on GameObject.", gameObject.name);
 				return;
 			}
 
@@ -91,8 +88,8 @@ namespace Adnc.QuickParallax {
 
 		public void ParallaxUpdate (Vector2 change) {
 			var speed = new Vector2(
-				moveSpeed.x * _relativeSpeed.Value.x,
-				moveSpeed.y * _relativeSpeed.Value.y);
+				moveSpeed.Value.x * _relativeSpeed.Value.x,
+				moveSpeed.Value.y * _relativeSpeed.Value.y);
 
 			var pos = transform.position;
 			pos.x += change.x * speed.x;

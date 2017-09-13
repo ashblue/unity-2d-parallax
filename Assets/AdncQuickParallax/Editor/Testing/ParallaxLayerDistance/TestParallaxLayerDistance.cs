@@ -22,8 +22,8 @@ namespace Adnc.QuickParallax.Editors.Testing {
             _layerDistance.SetSpeedByFurthest(layers);
 
             layers.ForEach(l => {
-                Assert.AreEqual(speed * (l.Distance / 7), l.moveSpeed.x);
-                Assert.AreEqual(speed * (l.Distance / 7), l.moveSpeed.y);
+                Assert.AreEqual(speed * (l.Distance / 7), l.moveSpeed.Value.x);
+                Assert.AreEqual(speed * (l.Distance / 7), l.moveSpeed.Value.y);
             });
         }
 
@@ -39,8 +39,8 @@ namespace Adnc.QuickParallax.Editors.Testing {
             _layerDistance.SetSpeedByFurthest(layers);
 
             layers.ForEach(l => {
-                Assert.AreEqual(Mathf.Round(speed * (l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.x));
-                Assert.AreEqual(Mathf.Round(speed * (l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.y));
+                Assert.AreEqual(Mathf.Round(speed * (l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.Value.x));
+                Assert.AreEqual(Mathf.Round(speed * (l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.Value.y));
             });
         }
 
@@ -56,8 +56,8 @@ namespace Adnc.QuickParallax.Editors.Testing {
             _layerDistance.SetSpeedByClosest(layers);
 
             layers.ForEach(l => {
-                Assert.AreEqual(Mathf.Round(speed * Mathf.Abs(l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.x));
-                Assert.AreEqual(Mathf.Round(speed * Mathf.Abs(l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.y));
+                Assert.AreEqual(Mathf.Round(speed * Mathf.Abs(l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.Value.x));
+                Assert.AreEqual(Mathf.Round(speed * Mathf.Abs(l.Distance / maxDistance)), Mathf.Round(l.moveSpeed.Value.y));
             });
         }
 
@@ -70,8 +70,8 @@ namespace Adnc.QuickParallax.Editors.Testing {
             _layerDistance.SetSpeedByClosest(layers);
 
             layers.ForEach(l => {
-                Assert.AreEqual(speed * Mathf.Abs(l.Distance / 7), l.moveSpeed.x);
-                Assert.AreEqual(speed * Mathf.Abs(l.Distance / 7), l.moveSpeed.y);
+                Assert.AreEqual(speed * Mathf.Abs(l.Distance / 7), l.moveSpeed.Value.x);
+                Assert.AreEqual(speed * Mathf.Abs(l.Distance / 7), l.moveSpeed.Value.y);
             });
         }
 
