@@ -17,7 +17,7 @@ namespace Adnc.QuickParallax {
 
 		[Tooltip("Set the parallax speed relative to the closest and furthest layer")]
 		[SerializeField]
-		private bool _setRelativeParallaxSpeed;
+		private bool _setRelativeParallaxSpeed = true;
 
 		[ShowToggle("_setRelativeParallaxSpeed")]
 		[Tooltip("Override settings for what is considered the furthest layer")]
