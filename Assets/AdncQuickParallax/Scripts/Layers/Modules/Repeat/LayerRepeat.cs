@@ -20,7 +20,8 @@ namespace Adnc.QuickParallax.Modules {
 
         private SpriteRenderer _sprite;
 
-        [InfoBox("Automatically repeats and recycles overflowing graphics based on the current camera position")]
+        [InfoBox("Automatically repeats and recycles overflowing graphics based on the current camera position. Note the" +
+                 " graphic must have the pivot set to center")]
 
         [Tooltip("Repeat elements on the corresponding axis")]
         [SerializeField]
