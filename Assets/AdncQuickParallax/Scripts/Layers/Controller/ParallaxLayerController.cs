@@ -8,7 +8,6 @@ namespace Adnc.QuickParallax {
 
         private Coroutine _loopLayers;
         private bool _isSetup;
-        private Transform _trackedTransform;
 
         [Tooltip("Enable debug mode for all layers")]
         [SerializeField]
@@ -28,8 +27,15 @@ namespace Adnc.QuickParallax {
             get { return _current; }
         }
 
-        public Transform TrackingTarget {
-            get { return _trackingTarget; }
+        public virtual Transform TrackingTarget {
+            get {
+                if (_trackingTarget == null && Camera.main != null) {
+                    _trackingTarget = Camera.main.transform;
+                }
+
+                return _trackingTarget;
+            }
+            set { _trackingTarget = value; }
         }
 
         public bool DebugEnabled {
@@ -72,11 +78,11 @@ namespace Adnc.QuickParallax {
         }
 
         IEnumerator LoopLayers () {
-            var prevPos = _trackedTransform.position;
+            var prevPos = TrackingTarget.position;
 
             while (true) {
-                var change = _trackedTransform.position - prevPos;
-                prevPos = _trackedTransform.position;
+                var change = TrackingTarget.position - prevPos;
+                prevPos = TrackingTarget.position;
 
                 foreach (var parallaxLayer in _layers) {
                     parallaxLayer.ParallaxUpdate(change);
@@ -118,8 +124,6 @@ namespace Adnc.QuickParallax {
 
             _isSetup = true;
 
-            _trackedTransform = GetTrackedTransform();
-
             foreach (var parallaxLayer in _layers) {
                 parallaxLayer.Setup();
             }
@@ -137,18 +141,6 @@ namespace Adnc.QuickParallax {
                 if (parallaxLayer == null) continue;
                 parallaxLayer.RestoreOriginPosition();
             }
-        }
-
-        /// <summary>
-        /// The object that will be tracked for changes to determine parallax movement amount
-        /// </summary>
-        /// <returns></returns>
-        protected virtual Transform GetTrackedTransform () {
-            if (_trackingTarget == null) {
-                _trackingTarget = Camera.main.transform;
-            }
-
-            return _trackingTarget.transform;
         }
 
         private void OnDestroy () {

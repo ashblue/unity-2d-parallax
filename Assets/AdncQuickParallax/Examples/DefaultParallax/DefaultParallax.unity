@@ -796,7 +796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _debug: 1
   _autoInit: 1
-  _trackingTarget: {fileID: 1045135442}
+  _trackingTarget: {fileID: 0}
 --- !u!4 &1417344968
 Transform:
   m_ObjectHideFlags: 0
