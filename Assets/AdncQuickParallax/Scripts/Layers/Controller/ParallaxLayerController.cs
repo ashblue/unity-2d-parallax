@@ -21,7 +21,9 @@ namespace Adnc.QuickParallax {
         [SerializeField]
         private Transform _trackingTarget;
 
-        private List<ParallaxLayer> _layers = new List<ParallaxLayer>();
+        // @TODO Consider moving these with associated logic into a collection and base class
+        private readonly List<ParallaxLayer> _layers = new List<ParallaxLayer>();
+        private readonly List<ParallaxLayerGroup> _layerGroups = new List<ParallaxLayerGroup>();
 
         public static ParallaxLayerController Current {
             get { return _current; }
@@ -105,16 +107,28 @@ namespace Adnc.QuickParallax {
         public void Reset () {
             Stop();
             _layers.Clear();
+            _layerGroups.Clear();
             _isSetup = false;
         }
 
         public void AddLayer (ParallaxLayer layer) {
-            if (_isSetup) {
-                Debug.LogError("Cannot add later after Setup is run");
-                return;
-            }
+            if (_layers.Contains(layer)) return;
 
             _layers.Add(layer);
+
+            if (_isSetup) {
+                layer.Setup();
+            }
+        }
+
+        public void AddLayerGroup (ParallaxLayerGroup layerGroup) {
+            if (_layerGroups.Contains(layerGroup)) return;
+
+            _layerGroups.Add(layerGroup);
+
+            if (_isSetup) {
+                layerGroup.Setup();
+            }
         }
 
         private void Setup () {
@@ -123,6 +137,10 @@ namespace Adnc.QuickParallax {
             }
 
             _isSetup = true;
+
+            foreach (var layerGroup in _layerGroups) {
+                layerGroup.Setup();
+            }
 
             foreach (var parallaxLayer in _layers) {
                 parallaxLayer.Setup();

@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace Adnc.QuickParallax {
 	public class ParallaxLayerGroup : MonoBehaviour {
+		private bool _setup;
+
 		[Tooltip("Leave layers blank to automatically grab layers from nested objects")]
 		[SerializeField]
 		private List<ParallaxLayer> _layers;
@@ -29,13 +31,19 @@ namespace Adnc.QuickParallax {
 		[SerializeField]
 		private ParallaxLayerDistance _closestLayer = new ParallaxLayerDistance { maxSpeed = new Vector2Data(-0.2f, 0) };
 
-		private void Awake () {
+		private void Start () {
 			if (_layers == null || _layers.Count == 0) {
 				_layers = GetChildLayers().ToList();
 			}
+
+			ParallaxLayerController.Current.AddLayerGroup(this);
 		}
 
-		private void Start () {
+		public void Setup () {
+			// Skip if already run 1x
+			if (_setup) return;
+			_setup = true;
+
 			if (_setRelativeParallaxSpeed) {
 				_furthestLayer.SetSpeedByFurthest(_layers);
 				_closestLayer.SetSpeedByClosest(_layers);
