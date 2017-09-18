@@ -73,12 +73,6 @@ namespace Adnc.QuickParallax {
 				_sprite = GetComponentInChildren<SpriteRenderer>();
 			}
 
-			// @TODO Move this warning to relative parallax setup and off of the layer directly
-			if (Mathf.Abs(transform.position.z) < 0.1f) {
-				Debug.LogWarningFormat("The Z-Index of GameObject {0} is set to 0. Please set the Z-Index to a non-zero number. Disabling parallax on GameObject.", gameObject.name);
-				return;
-			}
-
 			ParallaxLayerController.Current.AddLayer(this);
 		}
 
@@ -110,8 +104,8 @@ namespace Adnc.QuickParallax {
 
 		public void Setup () {
 			if (_isSetup) return;
-
 			_isSetup = true;
+
 			if (TriggerSetup != null) TriggerSetup.Invoke(this);
 		}
 
