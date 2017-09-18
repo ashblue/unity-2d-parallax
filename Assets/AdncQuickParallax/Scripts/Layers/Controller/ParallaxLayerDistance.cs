@@ -48,6 +48,11 @@ namespace Adnc.QuickParallax {
                 var x = percent * maxSpeed.Value.x;
                 var y = percent * maxSpeed.Value.y;
 
+                if (Mathf.Abs(layer.transform.position.z) < 0.1f) {
+                    Debug.LogWarningFormat("The Z-Index of GameObject {0} is set to 0. Please set the Z-Index to a non-zero number. Parallax will be disabled on this GameObject.", layer.gameObject.name);
+                    return;
+                }
+
                 layer.moveSpeed.SetValue(new Vector2(x, y));
             });
         }
