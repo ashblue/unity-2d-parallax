@@ -1,26 +1,19 @@
 # unity-2d-parallax
 Fast, customizable, and easy to use toolset for 2D Parallaxing in Unity. To get
 started simply import the Parallax2D package into your project. See the
-"Quick Start Guide" or "Default" scene to get started.  
+"Examples" folder for implementation.
 
-## Quick Start Guide
-A no BS guide to setting up parallaxing in a few minutes with any 2D scene.
+## Features
+A few of the more impressive features include.
 
-1. Import the Parallax2D package
-1. Include a Parallax2D script in your scene
-1. Assign values to "Auto Parallax Tag" and "Auto Parallax Tag Group"
-1. Assign proper tags to the items you want to parallax
-1. Click play and you're done
-
-## Advanced Usage
-For advanced configuration of a parallax layer, manually add a ParallaxLayer
-component to whatever you want to move. Below are a few of the options you can
-customize.
-
-* Custom parallax speeds
-* Self moving (motorized)
-* Advanced repeat configuration
-
-### Debugging
-Tick the debug option on a repeating ParallaxLayer component to display an
-outline of the repeat boundary.
+* Relative **automatic parallaxing calculations** with parallax groups. Simply define
+the farthest and nearest layer. Let the calculations do the rest.
+* Ability to **limit or wrap a boundary area** of a parallax group. Define boundaries for
+multiple or a single layer.
+* On started **simulate parallax movement** from a single point of origin. Great for 
+simulating movement when enetering in from a specific side.
+* **X and Y axis repeating image support**. Automatically repeat elements on the x or y axis by
+adding a simple component to a parallax layer. Optimized with GameObject recycling for out of
+view elements.
+* **Relative camera particle FX**. Simulate particles moving at a specific parallax speed
+with Unity's built-in particle system. Great for smoke, rain, embers, dust, ect.
